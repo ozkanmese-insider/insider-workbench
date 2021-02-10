@@ -1,0 +1,37 @@
+{
+    "workbench.editor.highlightModifiedTabs": true,
+    "search.showLineNumbers": true,
+    "search.useGlobalIgnoreFiles": true,
+    "debug.allowBreakpointsEverywhere": true,
+    "debug.enableAllHovers": true,
+    "eslint.alwaysShowStatus": true,
+    "files.eol": "\n",
+    "window.zoomLevel": -1,
+    "terminal.integrated.cursorStyle": "line",
+    "editor.rulers": [120],
+    "workbench.colorCustomizations": {
+            "editorRuler.foreground": "#ff4081"
+        },
+        "cSpell.words": [
+            ""
+        ],
+        "cSpell.ignoreWords": [
+            "border",
+            "box",
+            "box sizing border important white space pre line word wrap break display webkit orient vertical clamp",
+            "break",
+            "clamp",
+            "display",
+            "important",
+            "line",
+            "orient",
+            "pre",
+            "sizing",
+            "space",
+            "vertical",
+            "webkit",
+            "white",
+            "word",
+            "wrap"
+        ]
+}
