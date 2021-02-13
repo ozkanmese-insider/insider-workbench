@@ -1,19 +1,15 @@
 spApi.isOnMainPage = function () {
     
     return (
-        (window.location.pathname === '/') |
+        (window.location.pathname === '/') ||
     (window.location.pathname === 'index.php')
     ); 
 };
 
 spApi.isOnProductPage = function () {
     var selection = document.querySelector('div#product');
-
-    if (selection) {
-        return true;
-    }
  
-    return false; 
+    return selection ? true : false;
 };
 
 spApi.isOnCategoryPage = function () {
