@@ -38,20 +38,33 @@ Insider.storage.get('ins-last-step') || '';
 /****************************************************************************************************************** */
 
 /* OPT-52178 Start - teklif_verenler User Attribute */
+//var path = Insider.fns.hasParameter('/benzersiz-teklif-oyna-kazan-kampanyasi/make-offer-result');
 
-var flag = false;
+/*
+if (path === true) {
+    (teklif > -1) ? flag = true : flag = false;   
+} else {
+    flag = false;
+}
+*/
+var flag;
+var teklif = Insider.dom('.teklif-heading1').text().indexOf('eklif');
 
-Insider.fns.onElementLoaded(button, function () { 
-    Insider.eventManager.once('click.ins:user:clicked:opt-52178', button, 
-        function () {
-            flag = true;
+switch (location.href) {
+    case 'https://www.vodafone.com.tr/benzersiz-teklif-oyna-kazan-kampanyasi/make-offer-result':
+        (teklif > -1) ? flag = true : flag = false;
+        break;
+    default:
+        flag = false;
+        break;
+}
 
-            Insider.storage.set({
-                name: 'ins-offer-given',
-                value: flag
-            });
-        });
-}).listen();
+Insider.storage.set({
+    name: 'ins-offer-given',
+    value: flag
+});
+
+Insider.storage.get('ins-offer-given') || '';
 /* OPT-52178 END - teklif_verenler User Attribute */
 
 // butona tıkladıktan sonra link sorgusu atılıcak.
@@ -81,6 +94,9 @@ Insider.storage.set({
 });
 
 Insider.storage.get('ins-is-vodafone') || '';
+/**
+ * *******************************************************************************************************
+ */
 
 var vodafoneValue;
 var path = window.location.href.indexOf('/benzersiz-teklif-oyna-kazan-kampanyasi/nvf-login-otp');

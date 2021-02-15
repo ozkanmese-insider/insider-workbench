@@ -6,7 +6,7 @@
     "debug.enableAllHovers": true,
     "eslint.alwaysShowStatus": true,
     "files.eol": "\n",
-    "window.zoomLevel": -1,
+    "window.zoomLevel": -2,
     "terminal.integrated.cursorStyle": "line",
     "editor.rulers": [120],
     "workbench.colorCustomizations": {
