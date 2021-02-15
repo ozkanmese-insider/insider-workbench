@@ -69,3 +69,4 @@ Insider.__external.productClassCalculation50902 = function (config) {
     return self.init();
 };
 /* OPT-50902 ENDS */
+Insider.campaign.get(754).pageSettings.locationConfig.selectedElement;
