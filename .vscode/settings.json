@@ -10,7 +10,7 @@
     "terminal.integrated.cursorStyle": "line",
     "editor.rulers": [120],
     "workbench.colorCustomizations": {
-            "editorRuler.foreground": "#ff4081"
+            "editorRuler.foreground": "#ff0000"
         },
         "cSpell.words": [
             ""

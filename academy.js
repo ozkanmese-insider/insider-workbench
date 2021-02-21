@@ -58,7 +58,7 @@ spApi.isOnAfterPaymentPage = function () {
 
 spApi.getOrderId = function () {
     var pageParam = window.location.search.substring(1);
-    var urlParams = pageParam.split('&');
+    var urlParams = pageParam.split('/');
 
     for (var i = 0; i < urlParams.length; i++) {
         var param = urlParams[i].split('=');

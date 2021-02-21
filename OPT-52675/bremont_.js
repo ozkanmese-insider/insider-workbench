@@ -1,17 +1,24 @@
-/* OPT-52675 START*/
-var storageName = 'ins-cart-clear';
-var flag = false;
+var cartCount = Insider.systemRules.call('getCartCount');
+var storageName = 'ins-cart-clear-52675';
+var config = Insider.storage.localStorage.get(storageName) || {
+    actualValue: false,
+    flag: false
+};
+var updateStorage = function () {
+    Insider.storage.localStorage.set({
+        name: storageName,
+        value: config,
+        expires: 1
+    });
+};
 
-if (Insider.systemRules.call('isOnCartPage')) {
-    if (Insider.systemRules.call('getCartCount') === 0 ) {
-        flag = true;
-    }
+if (cartCount) {
+    config.flag = true;
+    updateStorage();
 }
 
-Insider.storage.set({
-    name: storageName,
-    value: flag
-});
-
-Insider.storage.get(storageName) || '';
-/* OPT-52675 END*/
+if (config.flag === true && !cartCount) {
+    config.actualValue = true;
+    updateStorage();
+}
+((Insider.storage.localStorage.get(storageName) || {}).actualValue || false);

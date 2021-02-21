@@ -1,7 +1,7 @@
-var setLocation = '';
-var path = window.location.href;
+var setLocation = ' ';
+var storageName = 'ins-last-step-52178';
 
-if (path.indexOf('https://www.vodafone.com.tr/evde-internet') >-1) {
+if (window.location.href.indexOf('https://www.vodafone.com.tr/evde-internet') >-1) {
     switch (location.href) {
         case 'https://www.vodafone.com.tr/evde-internet/home/address':
             setLocation = 'address';
@@ -25,8 +25,8 @@ if (path.indexOf('https://www.vodafone.com.tr/evde-internet') >-1) {
 }
 
 Insider.storage.set({
-    name: 'ins-last-step',
+    name: storageName,
     value: setLocation
 });
 
-Insider.storage.get('ins-last-step') || '';
+Insider.storage.get(storageName) || '';

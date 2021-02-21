@@ -70,3 +70,12 @@ Insider.__external.productClassCalculation50902 = function (config) {
 };
 /* OPT-50902 ENDS */
 Insider.campaign.get(754).pageSettings.locationConfig.selectedElement;
+
+var button = Insider.dom('div > div > div > div.form__row.no-gutter--bottom.align--center > button');
+
+Insider.fns.onElementLoaded(button, function () { 
+    Insider.eventManager.once('click.ins:user:clicked:opt-52178', button, 
+        function () {
+
+        });
+}).listen();

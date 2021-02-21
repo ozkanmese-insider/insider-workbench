@@ -1,9 +1,9 @@
 var flag;
-var teklif = Insider.dom('.teklif-heading1').text().indexOf('eklif');
+var storageName = 'ins-offer-given-52178';
 
 switch (location.href) {
     case 'https://www.vodafone.com.tr/benzersiz-teklif-oyna-kazan-kampanyasi/make-offer-result':
-        (teklif > -1) ? flag = true : flag = false;
+        (Insider.dom('.teklif-heading1').text().indexOf('eklif') > -1) ? flag = true : flag = false;
         break;
     default:
         flag = false;
@@ -11,8 +11,8 @@ switch (location.href) {
 }
 
 Insider.storage.set({
-    name: 'ins-offer-given',
+    name: storageName,
     value: flag
 });
 
-Insider.storage.get('ins-offer-given') || '';
+Insider.storage.get(storageName) || false;

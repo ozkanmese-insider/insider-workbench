@@ -13,3 +13,15 @@ Insider.__external.saveWriterStorage = function (pathName, storageName) {
 
     return Insider.storage.get(storageName) || '';
 };
+
+Insider.__external.saveWriterStorage = function (pathName, storageName) {
+    Insider.storage.set({
+        name: storageName,
+        value: Insider.fns.hasParameter(pathName)
+    });
+
+    return Insider.storage.get(storageName) || ''; };
+
+if (typeof Insider.__external.saveWriterStorage === 'function') {
+    // deneme
+}
