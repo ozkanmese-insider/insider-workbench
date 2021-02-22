@@ -43,3 +43,7 @@ if (Insider.systemRules.call('isOnAfterPaymentPage')) {
 
 Insider.storage.localStorage.get(paidProductsCategories) || '';
 /*opt-52715 after payment end */
+
+
+
+Insider.storage.get('ins-userDateV').length === 1

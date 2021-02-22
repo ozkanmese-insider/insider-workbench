@@ -8,7 +8,8 @@ var datas = (((((dataLayer || []).filter(function(dataLayerItem) {
 
 Insider.storage.set({
     name: datasStorage,
-    value: JSON.stringify(datas)
+    value: JSON.stringify(datas),
+    expires: 30
 });
 
 JSON.parse(Insider.storage.localStorage.get(datasStorage));
