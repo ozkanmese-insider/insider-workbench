@@ -3,9 +3,7 @@ var storageName = 'ins-new-user-left-cart-page-52715';
 
 if (Insider.storage.get('ins-userDateV').length === 1) {
     Insider.eventManager.once('beforeunload.ins:page:refresh:OPT123', window, function () {
-        if (Insider.) {
-            value = true;
-        }
+       
     });
 
 }
