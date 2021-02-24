@@ -1,49 +1,74 @@
-/*OPT-52715 - cart page actions START*/
-var datasStorage = 'ins-product-data-52715';
-var paidProductsCategories = 'ins-last-paid-products-category-52715';
-var categoryBought = [];
-var datas = (((((dataLayer || []).filter(function (dataLayerItem) {
-    return dataLayerItem.event === 'cartScreen';}) || [])[0] || {}).ecommerce || {}).checkout || {}).products;
+/*OPT-52715 start*/
+/*OPT-52715 start*/
+(function (self) {
+    var storageData = Insider.storage.session.get('ins-session-information') || {};
+    var sessionInformation = {
+        visitTime: storageData.visitTime || Insider.dateHelper.getTime(),
+        lastSessionPurchase: storageData.lastSessionPurchase || false,
+        isAddedToCart: storageData.isAddedToCart || false,
+        isCheckOutPage: storageData.isCheckOutPage || false,
+        isFirstPageProduct: storageData.isFirstPageProduct,
+        timeSpendOnSession: (Insider.dateHelper.getTime() - Number(storageData.visitTime || 
+            Insider.dateHelper.getTime())) / Insider.dateHelper.ONE_SECOND_AS_MILLISECOND
+    };
 
-Insider.storage.set({
-    name: datasStorage,
-    value: JSON.stringify(datas)
-});
+    self.init = function () {
+        self.setSessionStorage();
+        self.checkConditions();
+    };
 
-JSON.parse(Insider.storage.localStorage.get(datasStorage));
-/*OPT-52715 - cart page actions end */
+    self.setSessionStorage = function () {
+        Insider.storage.session.set({
+            name: 'ins-session-information',
+            value: sessionInformation
+        });
+    };
 
-/**OPT-52715 after payment start */
-if (Insider.systemRules.call('isOnAfterPaymentPage')) {
-    var productDatas = JSON.parse(Insider.storage.localStorage.get(datasStorage));
-    var paidProducts = Insider.systemRules.call('getPaidProducts');
-    var index;
+    self.checkConditions = function () {
+        if (Insider.systemRules.call('isOnAfterPaymentPage')) {
+            sessionInformation.lastSessionPurchase = true;
 
-    for (var i = 0; i < productDatas.length; i++) {
-        for (var z = 0; z < paidProducts.length; z++) {
-            if (productDatas[i].id.indexOf(paidProducts[z].id)) {
-                index = categoryBought.indexOf(productDatas[i].category);
-
-                if (index > -1) {
-                    categoryBought.splice(index, 1);
-                }
-
-                categoryBought.push(productDatas[i].category);
-            }
+            self.setSessionStorage();
         }
-    }
 
-    Insider.storage.set({
-        name: paidProductsCategories,
-        value: JSON.stringify(categoryBought)
-    });
+        if (Insider.systemRules.call('getCartCount') > 0) {
+            sessionInformation.isAddedToCart = true;
 
-    JSON.parse(Insider.storage.localStorage.get(paidProductsCategories));
-}
+            self.setSessionStorage();
+        }
 
-Insider.storage.localStorage.get(paidProductsCategories) || '';
-/*opt-52715 after payment end */
+        if (Insider.fns.hasParameter('/checkout/onepage/')) {
+            sessionInformation.isCheckOutPage = true;
 
+            self.setSessionStorage();
+        }
 
-
-Insider.storage.get('ins-userDateV').length === 1
+        if (sessionInformation.isFirstPageProduct === 'undefined') {
+            sessionInformation.isFirstPageProduct = Insider.systemRules.call('isOnProductPage');
+        }
+    };
+    
+    self.init();
+})({});
+/* OPT-52715 END*/
+//1.
+!!((Insider.storage.session.get('ins-session-information') || {}).timeSpendOnSession < 10);
+//2.
+!!((Insider.storage.session.get('ins-session-information') || {}).timeSpendOnSession < 20) &&
+!(Insider.storage.session.get('ins-session-information') || {}).lastSessionPurchase;
+//3.
+!!(Insider.storage.session.get('ins-session-information') || {}).isAddedToCart && 
+    !(Insider.storage.session.get('ins-session-information') || {}).lastSessionPurchase;
+//4.
+!!(Insider.storage.session.get('ins-session-information') || {}).isCheckOutPage &&
+    !(Insider.storage.session.get('ins-session-information') || {}).lastSessionPurchase;
+//5. 
+!!(Insider.storage.session.get('ins-session-information') || {}).isFirstPageProduct;
+//6.
+!!((Insider.storage.session.get('ins-session-information') || {}).timeSpendOnSession >
+     Insider.dateHelper.ONE_MINUTE_AS_SECONDS * 5) &&
+!(Insider.storage.session.get('ins-session-information') || {}).lastSessionPurchase;
+//7.
+(Insider.storage.get('ins-userDateV').length === 1 && Insider.systemRules.call('isOnCartPage')) || false;
+//8.
+(Insider.fns.hasParameter('/checkout/onepage/') || Insider.fns.hasParameter('/checkout/review/')) || false;
