@@ -72,3 +72,10 @@
 (Insider.storage.get('ins-userDateV').length === 1 && Insider.systemRules.call('isOnCartPage')) || false;
 //8.
 (Insider.fns.hasParameter('/checkout/onepage/') || Insider.fns.hasParameter('/checkout/review/')) || false;
+
+if (!(Insider.storage.session.get('ins-session-information') || {}).isFirstPageProduct && 
+    Insider.systemRules.call('isOnProductPage')) {
+    Insider.systemRules.call('isOnProductPage');
+}
+
+!!((Insider.storage.session.get('ins-session-information') || {}).isFirstPageProduct);/*OPT-52715*/
