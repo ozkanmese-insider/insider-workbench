@@ -1,7 +1,30 @@
-https://www.vodafone.com.tr/benzersiz-teklif-oyna-kazan-kampanyasi/nvf-login-otp
-
-https://www.vodafone.com.tr/benzersiz-teklif-oyna-kazan-kampanyasi/login
-
-https://www.vodafone.com.tr/benzersiz-teklif-oyna-kazan-kampanyasi/make-offer-result
-
-body > app-root > app-make-offer-result > div > div > h2  Teklif Verildi
+@media screen and (max-width:450px) {
+    .ins-preview-wrapper-1004 {
+             margin-top: 100px;
+    }
+}
+@media screen and (max-width:420px) {
+    .ins-preview-wrapper-1004 {
+             margin-top: 100px;
+    }
+}
+@media screen and (max-width:400px) {
+     .ins-preview-wrapper-1004 {
+            margin-top: 100px;
+    }
+}
+@media screen and (max-width:375px) {
+   .ins-preview-wrapper-1004 {
+            margin-top: 100px;
+    }
+}
+@media screen and (max-width:360px) {
+   .ins-preview-wrapper-1004 {
+            margin-top: 100px;
+    }
+}
+@media screen and (max-width:330px) {
+   .ins-preview-wrapper-1004 {
+            margin-top: 100px;
+    }
+}
