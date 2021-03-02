@@ -75,6 +75,7 @@
             storageData.cartListOfCategory[category] = [productId] :
             storageData.cartListOfCategory[category].push(productId);
         storageData.currentCartListProductId.push(productId);
+        
         self.setStorage();
     };
     self.checkAfterPaymentCategory = function () {
@@ -97,10 +98,23 @@
             expires: Insider.dateHelper.addDay(90)
         });
     };
+
     self.init();
 })({});
-/* OPT-53128 END*/
-
+/* OPT-53128 END*//
 
 /* Object.keys(Insider.storage.localStorage.get('ins-purchased-control-opt53128').purchasedCategoryOfProduct).includes('Phấn Nước Cushion') */
 Object.keys(Insider.storage.localStorage.get('ins-purchased-control-opt53128').purchasedCategoryOfProduct).join('||');
+
+/*OPT-53128 start*/
+Object.keys(Insider.storage.localStorage.get('ins-purchased-control-opt53128').purchasedCategoryOfProduct).join('||');
+
+if (window.UndefinedVariable) {
+    Object.assign(window.UndefinedVariable, {});
+} 
+/*OPT-53128 end*/
+
+/*OPT-53128 start*/
+Object.keys(((Insider.storage.localStorage.get('ins-purchased-control-opt53128') ||
+    {}).purchasedCategoryOfProduct) || '').join('||');
+/*OPT-53128 end*/

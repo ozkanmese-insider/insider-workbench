@@ -1,52 +1,48 @@
-/*OPT-52715 start*/
-(function (self) {
-    var storageData = Insider.storage.session.get('ins-session-information') || {};
-    var sessionInformation = {
-        visitTime: storageData.visitTime || Insider.dateHelper.getTime(),
-        lastSessionPurchase: storageData.lastSessionPurchase || false,
-        isAddedToCart: storageData.isAddedToCart || false,
-        isCheckOutPage: storageData.isCheckOutPage || false,
-        isFirstPageProduct: storageData.isFirstPageProduct,
-        timeSpendOnSession: (Insider.dateHelper.getTime() - Number(storageData.visitTime || 
-            Insider.dateHelper.getTime())) / Insider.dateHelper.ONE_SECOND_AS_MILLISECOND
-    };
+/*OPT-53710*/
+var storageName = 'ins-last-searched-product-opt53710';
 
-    self.init = function () {
-        self.setSessionStorage();
-        self.checkConditions();
-    };
+if (Insider.systemRules.call('isOnProductPage')) {
+    var isSearchedProduct = Insider.fns.getReferrer();
 
-    self.setSessionStorage = function () {
-        Insider.storage.session.set({
-            name: 'ins-session-information',
-            value: sessionInformation
+    if (isSearchedProduct.indexOf('/search?text=') > -1) {
+        var searchedProductInformations = {
+            url: Insider.systemRules.call('getCurrentProduct').url,
+            imgUrl: Insider.systemRules.call('getCurrentProduct').img
+        };
+
+        Insider.storage.set({
+            name: storageName,
+            value: JSON.stringify(searchedProductInformations)
         });
-    };
+    }
+}
 
-    self.checkConditions = function () {
-        if (Insider.systemRules.call('isOnAfterPaymentPage')) {
-            sessionInformation.lastSessionPurchase = true;
+Insider.storage.localStorage.get(storageName);
+/*OPT-53710*/
+/* OPT-52363 START */
+var storageName = 'ins-last-searched-item-opt-52363';
 
-            self.setSessionStorage();
-        }
+if (Insider.fns.hasParameter('search?text=')) {
+    Insider.eventManager.once('click.add:to:search:opt52363', '.product_tile__link', function () {
+        var searchedFromPageName = Insider.dom(this).find('.product_tile__title').text();
 
-        if (Insider.systemRules.call('getCartCount') > 0) {
-            sessionInformation.isAddedToCart = true;
+        Insider.storage.localStorage.set({
+            name: storageName,
+            value: searchedFromPageName,
+            expires: 30
+        });
+    });
+}
 
-            self.setSessionStorage();
-        }
+Insider.eventManager.once('click.add:to:search:opt52363', '.suggestions_panel__products > a', function () {
+    var searchedFromBarProduct = Insider.dom(this).find('.suggestion_product__title').text();
 
-        if (Insider.fns.hasParameter('/checkout/onepage/')) {
-            sessionInformation.isCheckOutPage = true;
+    Insider.storage.localStorage.set({
+        name: storageName,
+        value: searchedFromBarProduct,
+        expires: 30
+    });
+});
 
-            self.setSessionStorage();
-        }
-
-        if (sessionInformation.isFirstPageProduct === 'undefined') {
-            sessionInformation.isFirstPageProduct = Insider.systemRules.call('isOnProductPage');
-        }
-    };
-    
-    self.init();
-})({});
-/* OPT-52715 END*/
+Insider.storage.localStorage.get(storageName) || '';
+/* OPT-52363 END */

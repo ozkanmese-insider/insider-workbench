@@ -79,3 +79,18 @@ Insider.fns.onElementLoaded(button, function () {
 
         });
 }).listen();
+
+(function (self) {
+    var variationId = ${1|c1,1};
+    self.init = function () {
+        self.reset();
+        self.buildHtml();
+    };
+    self.reset = function () {
+        /* some code */
+    };
+    self.buildHtml = function () {
+        /* some code */
+    };
+    self.init();
+})({});
