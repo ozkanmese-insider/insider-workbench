@@ -1,0 +1,1 @@
+Insider.dom('.is-select').attr('data-value') || ''; /* OPT-54703 */

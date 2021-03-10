@@ -1,32 +1,50 @@
-/*OPT-53710 START*/
-var storageName = 'ins-last-searched-product-opt53710';
-
-Insider.eventManager.once('click.add:to:search:opt53710', '.suggestions_panel__products > a', function () {
-    var searchedFromBarProductInformations = {
-        url: Insider.dom(this).attr('href'),
-        imgUrl: Insider.dom(this).find('.SCB-Product-IMG').attr('src')
+/* OPT-53710 START */
+(function (self) {
+    var storageName = 'ins-last-searched-product-opt53710';
+    var storageData = Insider.storage.get(storageName) || {
+        currentProduct: {},
+        lastClickedUrl: ''
     };
 
-    Insider.storage.localStorage.set({
-        name: storageName,
-        value: JSON.stringify(searchedFromBarProductInformations)
-    });
-});
-
-if (Insider.systemRules.call('isOnProductPage')) {
-    var isSearchedProduct = Insider.fns.getReferrer();
-    var searchedProductInformations = {
-        url: Insider.systemRules.call('getCurrentProduct').url,
-        imgUrl: Insider.systemRules.call('getCurrentProduct').img
+    self.init = function () {
+        self.setEvents();
+        self.checkConditions();
+        self.setStorage();
     };
 
-    if (isSearchedProduct.indexOf('/search?text=') > -1) {
+    self.setEvents = function () {
+        Insider.eventManager.once('click.add:to:search:opt53710', '.suggestions_panel__products > a', function () {
+            storageData.lastClickedUrl = Insider.dom(this).attr('href');
+
+            self.setStorage();
+        });
+    };
+
+    self.checkConditions = function () {
+        if (Insider.systemRules.call('isOnProductPage')) {
+            var currentProductInformations = Insider.systemRules.call('getCurrentProduct');
+
+            if (Insider.fns.getReferrer().indexOf('/search?text=') > -1 ||
+                currentProductInformations.url.indexOf(storageData.lastClickedUrl) > -1) {
+                storageData.currentProduct = currentProductInformations;
+            }
+        }
+    };
+
+    self.setStorage = function () {
         Insider.storage.set({
             name: storageName,
-            value: JSON.stringify(searchedProductInformations)
+            value: storageData,
+            expires: 90
         });
-    }
-}
+    };
 
-Insider.storage.localStorage.get(storageName);
-/*OPT-53710 END*/
+    self.init();
+})({});
+/* OPT-53710 END */
+
+(((Insider.storage.get('ins-last-searched-product-opt53710') || {}).currentProduct || {}).img || '');/* OPT-53710 */
+(((Insider.storage.get('ins-last-searched-product-opt53710') || {}).currentProduct || {}).url || '');/* OPT-53710 */
+
+
+bir daha init lenmesi gerekiyor

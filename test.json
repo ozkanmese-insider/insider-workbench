@@ -1,0 +1,39 @@
+{
+    "conditions": [{
+            "listenUrlChange": true
+        },
+        {
+            "element": [{
+                "selector": "#product-addtocart-button",
+                "checkType": "click"
+            }],
+            "delay": 1000
+        }, {
+            "element": [{
+                "selector": ".fake-tocart",
+                "checkType": "click"
+            }],
+            "delay": 3000
+        }
+    ]
+}
+
+
+
+{
+    "conditions": [{
+        "element": [{
+            "selector": "#product-addtocart-button",
+            "checkType": "click"
+        }],
+        "delay": 5000
+    }, {
+        "element": [{
+            "selector": ".fake-tocart",
+            "checkType": "click"
+        }],
+        "delay": 4000
+    }, {
+        "listenUrlChange": true
+    }]
+}

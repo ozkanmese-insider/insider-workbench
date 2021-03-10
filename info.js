@@ -9,27 +9,26 @@ Insider.fns.onElementLoaded(closeButton, function () {
     }, 300);
 }).listen();
 /* local storage*/
-var pathArray = window.location.pathname.split( '/' );
+var pathArray = window.location.pathname.split('/');
 var setLocation = pathArray[3];
 
-if ( pathArray[3] !== 'undefined' && pathArray[3] !== null) {
-    
+if (pathArray[3] !== 'undefined' && pathArray[3] !== null) {
+
     Insider.storage.set({
         name: 'lastStep',
         value: setLocation
     });
-} 
-else {
+} else {
     setLocation = 'home';
     Insider.storage.set({
         name: 'lastStep',
         value: setLocation
     });
-} 
+}
 //tersten bakma ve sayfa icinden bulma yapilacak
 Insider.fns.parseURL();
 
-new Date(Insider.generateTime*1000);
+new Date(Insider.generateTime * 1000);
 
 /* OPT-50902 STARTS */
 Insider.__external.productClassCalculation50902 = function (config) {
@@ -73,15 +72,17 @@ Insider.campaign.get(754).pageSettings.locationConfig.selectedElement;
 
 var button = Insider.dom('div > div > div > div.form__row.no-gutter--bottom.align--center > button');
 
-Insider.fns.onElementLoaded(button, function () { 
-    Insider.eventManager.once('click.ins:user:clicked:opt-52178', button, 
+Insider.fns.onElementLoaded(button, function () {
+    Insider.eventManager.once('click.ins:user:clicked:opt-52178', button,
         function () {
 
         });
 }).listen();
 
 (function (self) {
-    var variationId = ${1|c1,1};
+    var variationId = $ {
+        1 | c1, 1
+    };
     self.init = function () {
         self.reset();
         self.buildHtml();
@@ -94,3 +95,66 @@ Insider.fns.onElementLoaded(button, function () {
     };
     self.init();
 })({});
+
+Insider.campaign.shownCampaigns;
+Insider.campaign.decryptCampaignName('|-x-|RXZlbnQlMjBpbml0aWFsaXphdGlvbiUyMHRvJTIwbmV4dC5qcw==');
+var builderId = 2057;
+var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(builderId);
+Insider.campaign.decryptCampaignName();
+if (Insider.fns.hasParameter('uatns.komfort.pl/')) {
+    Insider.campaign.showAllCampaigns = function () {};
+}
+Insider.campaign.all.forEach(function (element) {
+    element.show = function () {};
+});
+
+var excludeCampaignVariationIds = ['c33', 'c35'];
+
+var exludeCampaignIsActive = excludeCampaignVariationIds.some(function (variationId) {
+    return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0] || {}]
+        .test || false);
+});
+
+if (exludeCampaignIsActive) {
+    Insider.campaign.all.forEach(function (campaign) {
+        if (excludeCampaignVariationIds.indexOf(campaign.id) === -1) {
+            if (!campaign.showIn.trigger) {
+                campaign.showIn.trigger = [1];
+            }
+
+            var rulesString = Insider.rules[campaign.showIn.trigger[0]].test;
+            var editedTrigger = rulesString.substr(0, rulesString.length) + '&& true===false';
+
+
+            Insider.rules[campaign.showIn.trigger[0]].test = editedTrigger;
+
+            console.log(campaign.id + ' :' + eval(Insider.rules[campaign.showIn.trigger[0]].test));
+        }
+    });
+}
+
+
+var excludeCampaignVariationIds = ['c33', 'c35'];
+
+var exludeCampaignIsActive = excludeCampaignVariationIds.some(function (variationId) {
+    return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0] || {}]
+        .test || false);
+});
+
+if (exludeCampaignIsActive) {
+    Insider.campaign.all.forEach(function (campaign) {
+        if (excludeCampaignVariationIds.indexOf(campaign.id) === -1) {
+            if (!campaign.showIn.segment) {
+                campaign.showIn.segment = [1];
+            }
+
+            var rulesString = Insider.rules[campaign.showIn.segment[0]].test;
+            var editedTrigger = rulesString.substr(0, rulesString.length) + '&& true===false';
+
+
+            Insider.rules[campaign.showIn.segment[0]].test = editedTrigger;
+
+            console.log(campaign.id + ' :' + eval(Insider.rules[campaign.showIn.segment[0]].test));
+        }
+    });
+}
