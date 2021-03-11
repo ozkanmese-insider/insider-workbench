@@ -3,23 +3,23 @@ var fbAuthButton = 'fbAuthButton';
 var userId = dataLayer[1].cd_userId;
 
 0 !== dataLayer[1].cd_userEmail.length && ('1' === localStorage.getItem(authButton) ? (dataLayer.push({
-    Category: 'Login',
-    Action: userId,
-    Label: dateFormatt,
-    event: 'gaEvent'
-}),
-localStorage.setItem(authButton, '0')) : ('1' === localStorage.getItem(fbAuthButton) ? dataLayer.push({
-    Category: 'Facebook Login',
-    Action: userId,
-    Label: dateFormatt,
-    event: 'gaEvent'
-}) : localStorage.setItem(authButton, '0'),
-localStorage.setItem(fbAuthButton, '0')));
+        Category: 'Login',
+        Action: userId,
+        Label: dateFormatt,
+        event: 'gaEvent'
+    }),
+    localStorage.setItem(authButton, '0')) : ('1' === localStorage.getItem(fbAuthButton) ? dataLayer.push({
+        Category: 'Facebook Login',
+        Action: userId,
+        Label: dateFormatt,
+        event: 'gaEvent'
+    }) : localStorage.setItem(authButton, '0'),
+    localStorage.setItem(fbAuthButton, '0')));
 localStorage.setItem(authButton, '0');
 localStorage.setItem(fbAuthButton, '0');
 $('.auth__form__submit.button').on('click', function () {
     'G\u0130R\u0130\u015e YAP' === $('.auth__form__submit.button')[0].innerText && (localStorage.setItem(fbAuthButton, '0'),
-    localStorage.setItem(authButton, '1'));
+        localStorage.setItem(authButton, '1'));
 });
 $('.inline.facebook.button').on('click', function () {
     localStorage.setItem(authButton, '0');

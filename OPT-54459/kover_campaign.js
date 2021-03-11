@@ -1,19 +1,21 @@
 /* OPT-54459 START */
 (function (self) {
     var excludeCampaignVariationIds = ['c33', 'c35'];
-    var exludeCampaignIsActive;
+    var exludeCampaignIsActive = false;
 
     self.init = function () {
-        self.campaignIsActive();
-        self.shownCampaignsSettings();
+        self.preventiveCampaignsAreActive();
+        self.preventCampaignsToShow();
     };
-    self.campaignIsActive = function () {
+
+    self.preventiveCampaignsAreActive = function () {
         exludeCampaignIsActive = excludeCampaignVariationIds.some(function (variationId) {
             return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0] || {}]
                 .test || false);
         });
     };
-    self.shownCampaignsSettings = function () {
+    
+    self.preventCampaignsToWork = function () {
         if (exludeCampaignIsActive) {
             Insider.campaign.all.forEach(function (campaign) {
                 if (excludeCampaignVariationIds.indexOf(campaign.id) === -1) {

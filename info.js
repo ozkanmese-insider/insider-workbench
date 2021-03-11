@@ -158,3 +158,41 @@ if (exludeCampaignIsActive) {
         }
     });
 }
+
+var array = [{ foo: 1 }, { bar: 1 },{foo:1}];
+Insider.fns.find(array, 'foo', 1);
+Insider.fns.clone({a:1,b:2});
+Insider.fns.stringify({a:1});
+Insider.fns.onElementLoaded().listen().reset();
+Insider.fns.has(["ko_KR",'all_ALL'], "all_ALL")
+Insider.fns.hasParameter();
+Insider.fns.getParameterFromUrl('https://www.larocheposay.co.kr/main.do?a=1&b=2', 'b');
+Insider.fns.isEmptyString('');
+Insider.fns.isObject({a:1});
+Insider.fns.objectValues({a:1,b:2});
+Insider.fns.isObjectInstance({a:1});
+Insider.fns.stringify({a:1});
+Insider.fns.parse('{a:1}');
+Insider.fns.encode(e);
+Insider.fns.decode(e);
+Insider.fns.random(2);
+Insider.fns.validateEmail('mehmet@eraslan.coms.s')   //--> her zaman saglıklı değil.
+Insider.fns.debounce( function(){}, 500);
+Insider.fns.throttle(function(){},500)
+Insider.fns.hash('asdasd');
+Insider.fns.assign({a:1}, {b:2});
+Insider.fns.hasOwn({a:1}, 'b');
+Insider.fns.pm({
+    target: this.nodes[0].contentWindow,
+    type: "provider",
+    message: {
+        data: JSON.stringify(i),
+        callback: encodeURI(e)
+    },
+    success: t || function() {}
+});
+Insider.fns.hasKey({a:1});
+Insider.fns.isFunction(function(){});
+(null || Insider.fns.noop )();
+Insider.fns.isNumber(123);
+Insider.fns.clone({a:1});
