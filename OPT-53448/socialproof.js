@@ -12,5 +12,6 @@ Insider.fns.onElementLoaded(selector, function () {
     Insider.dom(selector).text(newNumber);
 }).listen();
 
-!!Insider.storage.get('ins-test');
+true;
 /* OPT-53448 End */
+

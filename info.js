@@ -196,3 +196,5 @@ Insider.fns.isFunction(function(){});
 (null || Insider.fns.noop )();
 Insider.fns.isNumber(123);
 Insider.fns.clone({a:1});
+
+

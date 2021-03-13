@@ -15,7 +15,7 @@
         });
     };
     
-    self.preventCampaignsToWork = function () {
+    self.preventCampaignsToShow = function () {
         if (exludeCampaignIsActive) {
             Insider.campaign.all.forEach(function (campaign) {
                 if (excludeCampaignVariationIds.indexOf(campaign.id) === -1) {
