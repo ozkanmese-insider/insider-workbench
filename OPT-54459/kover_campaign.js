@@ -14,7 +14,7 @@
                 .test || false);
         });
     };
-    
+
     self.preventCampaignsToShow = function () {
         if (exludeCampaignIsActive) {
             Insider.campaign.all.forEach(function (campaign) {
@@ -23,10 +23,17 @@
                         campaign.showIn.segment = [1];
                     }
 
-                    var rulesString = Insider.rules[campaign.showIn.segment[0]].test;
-                    var editedTrigger = rulesString.substr(0, rulesString.length) + '&& true===false';
+                    if (!campaign.showIn.trigger) {
+                        campaign.showIn.trigger = [1];
+                    }
 
-                    Insider.rules[campaign.showIn.segment[0]].test = editedTrigger;
+                    var rulesString = Insider.rules[campaign.showIn.segment[0]].test;
+                    var editedSegment = rulesString.substr(0, rulesString.length) + '&& true===false';
+                    var rulesTrigger = Insider.rules[campaign.showIn.trigger[0]].test;
+                    var editedTrigger = 'true===false &&' + rulesTrigger.substr(rulesTrigger.length);
+
+                    Insider.rules[campaign.showIn.segment[0]].test = editedSegment;
+                    Insider.rules[campaign.showIn.trigger[0]].test = editedTrigger;
                 }
             });
         }
