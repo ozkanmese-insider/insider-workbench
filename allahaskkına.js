@@ -14,8 +14,7 @@
     self.preventiveCampaignsAreActive = function () {
         if (dekstopVariationId === 'c33' || mobileVariationId === 'c35') {
             exludeCampaignIsActive = excludeCampaignVariationIds.some(function (variationId) {
-                return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0] 
-                || {}].test || false);
+                return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0] || {}].test || false);
             });
         }
     };
@@ -35,7 +34,7 @@
                     var rulesString = Insider.rules[campaign.showIn.segment[0]].test;
                     var editedSegment = rulesString.substr(0, rulesString.length) + '&& true===false';
                     var rulesTrigger = Insider.rules[campaign.showIn.trigger[0]].test;
-                    var editedTrigger = 'true===false &&' + rulesTrigger.substr(rulesTrigger.length);
+                    var editedTrigger = 'true===false' + rulesTrigger.substr(rulesTrigger.length);
 
                     Insider.rules[campaign.showIn.segment[0]].test = editedSegment;
                     Insider.rules[campaign.showIn.trigger[0]].test = editedTrigger;
@@ -58,73 +57,20 @@
 (function (self) {
     var excludeCampaignVariationIds = ['c33', 'c35'];
     var exludeCampaignIsActive = false;
-    var dekstopVariationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(727);
-    var mobileVariationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(728);
 
     self.init = function () {
         self.preventiveCampaignsAreActive();
         self.preventCampaignsToShow();
-        self.showExcludeCampaign();
     };
-
-    self.preventiveCampaignsAreActive = function () {
-        if (dekstopVariationId === 'c33' || mobileVariationId === 'c35') {
-            exludeCampaignIsActive = excludeCampaignVariationIds.some(function (variationId) {
-                return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0]
-                || {}].test || false);
-            });
-        }
-    };
-
-    self.preventCampaignsToShow = function () {
-        if (exludeCampaignIsActive) {
-            Insider.campaign.all.forEach(function (campaign) {
-                if (excludeCampaignVariationIds.indexOf(campaign.id) === -1) {
-                    if (!campaign.showIn.segment) {
-                        campaign.showIn.segment = [1];
-                    }
-                    var rulesString = Insider.rules[campaign.showIn.segment[0]].test;
-                    var editedTrigger = rulesString.substr(0, rulesString.length) + '&& true===false';
-
-                    Insider.rules[campaign.showIn.segment[0]].test = editedTrigger;
-                }
-            });
-            Insider.__external.preventiveCampaingIsActive = true;
-        }
-    };
-
-    self.showExcludeCampaign = function () {
-        if (exludeCampaignIsActive) {
-            Insider.campaign.custom.show((Insider.browser.isMobile() ? mobileVariationId : dekstopVariationId));
-        }
-    };
-
-    self.init();
-})({});
-/* OPT-54459 END */
-
-/* OPT-54459 START */
-(function (self) {
-    var excludeCampaignVariationIds = ['c33', 'c35'];
-    var exludeCampaignIsActive = false;
-    var dekstopVariationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(727);
-    var mobileVariationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(728);
-
-    self.init = function () {
-        self.preventiveCampaignsAreActive();
-        self.preventCampaignsToShow();
-        self.showExcludeCampaign();
-    };
-
     self.preventiveCampaignsAreActive = function () {
         exludeCampaignIsActive = excludeCampaignVariationIds.some(function (variationId) {
-            return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0]
-             || {}].test || false);
+            return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0] || {}]
+                .test || false);
         });
-
     };
 
     self.preventCampaignsToShow = function () {
+
         if (exludeCampaignIsActive) {
             Insider.campaign.all.forEach(function (campaign) {
                 if (excludeCampaignVariationIds.indexOf(campaign.id) === -1) {
@@ -137,16 +83,11 @@
                     Insider.rules[campaign.showIn.segment[0]].test = editedTrigger;
                 }
             });
+
             Insider.__external.preventiveCampaingIsActive = true;
         }
-    };
 
-    self.showExcludeCampaign = function () {
-        if (exludeCampaignIsActive) {
-            Insider.campaign.custom.show((Insider.browser.isMobile() ? mobileVariationId : dekstopVariationId));
-        }
     };
-
     self.init();
 })({});
 /* OPT-54459 END */

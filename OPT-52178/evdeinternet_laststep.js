@@ -1,7 +1,7 @@
 var setLocation = ' ';
 var storageName = 'ins-last-step-52178';
 
-if (window.location.href.indexOf('https://www.vodafone.com.tr/evde-internet') >-1) {
+if (window.location.href.indexOf('https://www.vodafone.com.tr/evde-internet') > -1) {
     switch (location.href) {
         case 'https://www.vodafone.com.tr/evde-internet/home/address':
             setLocation = 'address';
@@ -20,7 +20,7 @@ if (window.location.href.indexOf('https://www.vodafone.com.tr/evde-internet') >-
             break;
         default:
             setLocation = '';
-            break;    
+            break;
     }
 }
 
