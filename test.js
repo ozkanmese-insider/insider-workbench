@@ -47,7 +47,7 @@
             sessionInformation.isFirstPageProduct = Insider.systemRules.call('isOnProductPage');
         }
     };
-    
+
     self.init();
 })({});
 /* OPT-52715 END*/

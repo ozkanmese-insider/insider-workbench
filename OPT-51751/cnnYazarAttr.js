@@ -1,4 +1,4 @@
-Insider.__external.saveWriterStorage = function (pathName, storageName) { 
+Insider.__external.saveWriterStorage = function (pathName, storageName) {
     var path = window.location.href;
     var flag = false;
 
@@ -20,8 +20,9 @@ Insider.__external.saveWriterStorage = function (pathName, storageName) {
         value: Insider.fns.hasParameter(pathName)
     });
 
-    return Insider.storage.get(storageName) || ''; };
+    return Insider.storage.get(storageName) || '';
+};
 
 if (typeof Insider.__external.saveWriterStorage === 'function') {
-    // deneme
+    // bu typeof fonksiyonu 
 }
