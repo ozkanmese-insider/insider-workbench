@@ -10,7 +10,7 @@
         'https://i-sleep.ro/mattresses/coolcomfort', 'https://i-sleep.ro/mattresses/cosmopolitan',
         'https://i-sleep.ro/mattresses/duosense', 'https://i-sleep.ro/mattresses/silver-plus',
         'https://i-sleep.ro/pillows/cool-comfort', 'https://i-sleep.ro/pillows/vital-care',
-        'https://i-sleep.ro/pillows/maxima', 'https://i-sleep.ro/pillows/maxima'];
+        'https://i-sleep.ro/pillows/maxima'];
 
     self.init = function () {
         if (!Insider.campaign.info.isControlGroup(variationId)) {
@@ -28,16 +28,20 @@
     self.checkUrls = function () {
         if (Insider.fns.hasParameter('i-sleep.ro/pillows')) {
             Insider.dom('.image > a').nodes.forEach(function (element, index) {
-                if (productUrls.indexOf(element.href) > -1) {
-                    Insider.dom('.custom-fields').nodes[index].innerHTML += self.badgeHTML();
+                for (var i = 0; i < productUrls.length; i++) {
+                    if (element.href.includes(productUrls[i])) {
+                        Insider.dom('.caption .custom-fields .predimstva').parent().nodes[index].innerHTML += self.badgeHTML();
+                    }
                 }
             });
         }
 
         if (Insider.fns.hasParameter('i-sleep.ro/mattresses')) {
             Insider.dom('.image > a').nodes.forEach(function (element, index) {
-                if (productUrls.indexOf(element.href) > -1) {
-                    Insider.dom('.custom-fields:odd').nodes[index].innerHTML += self.badgeHTML();
+                for (var i = 0; i < productUrls.length; i++) {
+                    if (element.href.includes(productUrls[i])) {
+                        Insider.dom('.caption .custom-fields .predimstva').parent().nodes[index].innerHTML += self.badgeHTML();
+                    }
                 }
             });
         }
@@ -45,7 +49,7 @@
 
     self.badgeHTML = function () {
         return (
-            '<div class="' + mainSelector + ' sp-custom-' + variationId + '-1">&nbsp;Livrare GRATUITĂ&nbsp;</div>'
+            '<div class="' + mainSelector + ' sp-custom-' + variationId + '-1"> Livrare GRATUITĂ </div>'
         );
     };
 
@@ -53,7 +57,7 @@
         var addToCartButton = Insider.dom('#button-cart');
 
         productUrls.forEach(function (url) {
-            if (url.indexOf(location.href) > -1) {
+            if (location.href.includes(url)) {
                 Insider.fns.onElementLoaded(addToCartButton, function () {
                     Insider.eventManager.once('click.ins:user:clicked:opt-56111', addToCartButton, function () {
                         Insider.__external.sendCustomGoal(builderId, goalId, false);
