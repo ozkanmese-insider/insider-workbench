@@ -1,65 +1,34 @@
- /* URL Redirect */
- sQuery('#link-button-7406741596772').on('click', function () {
-     var selectedValue = sQuery('[name="ins-option-page-7406741596772"]:checked').val();
-     switch (selectedValue) {
-         case ' Otomobilimi Değerlemek İstiyorum':
-             window.location.href = 'https://www.ikinciyeni.com/fiyatlandirici';
-             break;
-     }
- });
- sQuery('.ins-survey-selection-row').on('click', function () {
-     var selectedValue = Insider.dom('#ins-question-1619051132990 .ins-survey-selection-row.ins-survey-selection-checked').text().trim();
-     switch (selectedValue) {
-         case 'Hemen Al Otomobilleri':
-             window.location.href = 'https://www.ikinciyeni.com/garantili-ikinci-el-araba-ilanlari';
-             break;
-         case 'Günün Otomobilleri':
-             window.location.href = 'https://www.ikinciyeni.com/ihaledeki-ikinci-el-arabalar-ve-fiyatlari';
-             break;
-     }
- });
- sQuery('#ins-question-3821861407576 .ins-survey-selection-row').on('click', function () {
-     setTimeout(function () {
-         var selectedValue = Insider.dom('#ins-question-3821861407576 .ins-survey-selection-row.ins-survey-selection-checked').text().trim()
+/*OPT-55666 START*/
+(function (self) {
+    var isTradeInfoStorageName = 'ins-tradeInfo-55666';
 
-         switch (selectedValue) {
-             case 'Nakit Satmak İstiyorum':
-                 window.location.href = 'https://www.ikinciyeni.com/aracimi-hemen-nasil-satabilirim';
-                 break;
-             case 'Kullanırken Satmak İstiyorum':
-                 window.location.href = 'https://www.ikinciyeni.com/kullanirken-sat';
-                 break;
-         }
-     }, 500);
- });
+    self.init = function () {
+        self.setEvents();
+    };
 
+    self.setEvents = function () {
+        var pageCaseSelector = '';
 
- sQuery('#ins-question-1619051132990 .ins-survey-selection-row').on('click', function () {
-     setTimeout(function () {
-         var selectedValue = Insider.dom('#ins-question-1619051132990 .ins-survey-selection-row.ins-survey-selection-checked').text().trim();
+        if (Insider.systemRules.call('isOnCategoryPage')) {
+            pageCaseSelector = '#area-and-community-menu-bottom > div:nth-child(7)';
+        } else if (Insider.systemRules.call('isOnProductPage')) {
+            pageCaseSelector = '#buyContentTrade div span:last';
+        }
 
-         switch (selectedValue) {
-             case 'Hemen Al Otomobilleri':
-                 window.location.href = 'https://www.ikinciyeni.com/garantili-ikinci-el-araba-ilanlari';
-                 break;
-             case 'Günün Otomobilleri':
-                 window.location.href = 'https://www.ikinciyeni.com/ihaledeki-ikinci-el-arabalar-ve-fiyatlari';
-                 break;
-         }
-     }, 500);
- });
+        Insider.eventManager.once('click.ins:searched:before:opt55666', '.pagination > li , ' + pageCaseSelector,
+            function () {
+                self.setStorage();
+            });
+    };
 
- sQuery('#link-button-7406741596772').on('click', function () {
-     setTimeout(function () {
-         var selectedValue = sQuery('[name="ins-option-page-7406741596772"]:checked').val();
-         Insider.dom('#editable-button-3821861407576').attr('style', 'display:none'); //burasi
-         Insider.dom('#editable-button-1619051132990').attr('style', 'display:none');
-         switch (selectedValue) {
+    self.setStorage = function () {
+        Insider.storage.set({
+            name: isTradeInfoStorageName,
+            value: true,
+            expires: 365
+        });
+    };
 
-             case ' Otomobilimi Değerlemek İstiyorum':
-                 window.location.href = 'https://www.ikinciyeni.com/fiyatlandirici';
-                 break;
-         }
-     })
-
- });
+    self.init();
+})({});
+/*OPT-55666 END*/
