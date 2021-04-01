@@ -198,3 +198,28 @@ Insider.fns.isNumber(123);
 Insider.fns.clone({a:1});
 
 
+var totalCartAmount = Insider.systemRules.call('getTotalCartAmount');
+var getPaidProducts = Insider.systemRules.call('getPaidProducts');
+
+Insider.eventManager.once('cart:amount:update.ins:custom:show:camp:53277', function () {
+    if (totalCartAmount < Insider.systemRules.call('getTotalCartAmount')) {
+        
+    }
+});
+
+Insider.__external.sendCustomGoal = function (builderId, goalId, checkGoalExistence) {
+    var goalOfCamp = Insider.goalBuilder.getGoalBuildersByBuilderId(builderId)[goalId];
+    var variationId = Insider.campaign.userSegment.get()[builderId];
+    var storageNameOfGoal = 'sp-goal-' + variationId + '-' + goalId;
+
+    if (typeof goalOfCamp === 'undefined' ||
+        (checkGoalExistence && Insider.storage.get(storageNameOfGoal, 'localStorage', true) !== null)) {
+        return false;
+    }
+
+    goalOfCamp.goalList[0]['selectorString'] = 'true';
+    Insider.goalBuilder.addGoalTracking();
+};
+
+//Example Usage
+Insider.__external.sendCustomGoal(123, 45, true);
