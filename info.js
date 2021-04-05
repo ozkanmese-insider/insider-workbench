@@ -1,11 +1,9 @@
 // eslint-disable-next-line no-undef
-Insider.fns.onElementLoaded(closeButton, function () {
+var popup = Insider.dom('.baggage-rates-price-text :first');
+
+Insider.fns.onElementLoaded(popup, function () {
     setTimeout(function () {
-        // eslint-disable-next-line no-undef
-        Insider.eventManager.once('click.ins:button:close:' + variationId, closeButton, function () {
-            // eslint-disable-next-line no-undef
-            Insider.dom(headerSelector).removeClass('ins-edit-height-' + variationId);
-        });
+        Insider.dom('.baggage-rates-price-text :first').attr('style','color:#39454B; padding-left: 18%');
     }, 300);
 }).listen();
 /* local storage*/

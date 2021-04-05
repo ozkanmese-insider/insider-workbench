@@ -1,65 +1,124 @@
- /* URL Redirect */
- sQuery('#link-button-7406741596772').on('click', function () {
-     var selectedValue = sQuery('[name="ins-option-page-7406741596772"]:checked').val();
-     switch (selectedValue) {
-         case ' Otomobilimi Değerlemek İstiyorum':
-             window.location.href = 'https://www.ikinciyeni.com/fiyatlandirici';
-             break;
-     }
- });
- sQuery('.ins-survey-selection-row').on('click', function () {
-     var selectedValue = Insider.dom('#ins-question-1619051132990 .ins-survey-selection-row.ins-survey-selection-checked').text().trim();
-     switch (selectedValue) {
-         case 'Hemen Al Otomobilleri':
-             window.location.href = 'https://www.ikinciyeni.com/garantili-ikinci-el-araba-ilanlari';
-             break;
-         case 'Günün Otomobilleri':
-             window.location.href = 'https://www.ikinciyeni.com/ihaledeki-ikinci-el-arabalar-ve-fiyatlari';
-             break;
-     }
- });
- sQuery('#ins-question-3821861407576 .ins-survey-selection-row').on('click', function () {
-     setTimeout(function () {
-         var selectedValue = Insider.dom('#ins-question-3821861407576 .ins-survey-selection-row.ins-survey-selection-checked').text().trim()
+/* OPT-56149 START */
+var isMobile = Insider.browser.isMobile();
+var builderId = isMobile ? 1564 : 1563;
+var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(builderId);
+var classes = {
+    changeText: 'ins-change-text-' + variationId,
+    changePadding: 'ins-change-padding-' + variationId,
+    hide: 'ins-hide-' + variationId,
+};
+var partnerSelectors = isMobile ?
+    {
+        seeFaresButton: '.fare-and-services-flight-mobile-select-button:not(.disabled, .selected)',
+        rateButton: '.fare-and-services-mobile-extra-item .bagagge-rate-container:visible',
+        modal: '.left-section .modal-baggage-content'
+    } :
+    {
+        seeFaresButton: '.fare-and-services-flight-select-button-wrapper .button:not(:disabled, .selected)',
+        rateButton: '.fare-and-services-item a[ng-click*="showBaggageRates"]:visible',
+        modal: '.bundle-fare-row .modal-baggage-content'
+    };
+var eventName = isMobile ? 'touchstart' : 'mousedown';
+var isControlGroup = Insider.campaign.isControlGroup(variationId);
+var goalId = isMobile ? 433 : 432;
 
-         switch (selectedValue) {
-             case 'Nakit Satmak İstiyorum':
-                 window.location.href = 'https://www.ikinciyeni.com/aracimi-hemen-nasil-satabilirim';
-                 break;
-             case 'Kullanırken Satmak İstiyorum':
-                 window.location.href = 'https://www.ikinciyeni.com/kullanirken-sat';
-                 break;
-         }
-     }, 500);
- });
+var newRateButtonText = 'New Text';
+var newPopupTitle = 'New Baggage Rates Destination';
+var newPopupTexts = [
+    {
+        firstText: 'TEXT 1',
+        secondText: 'TEXT 2'
+    },
+    {
+        firstText: 'TEXT 3',
+        secondText: 'TEXT 4'
+    },
+    {
+        firstText: 'TEXT 5',
+        secondText: 'TEXT 6'
+    },
+    {
+        firstText: 'TEXT 7',
+        secondText: 'TEXT 8'
+    },
+    {
+        firstText: 'TEXT 9',
+        secondText: 'TEXT 10'
+    },
+    {
+        firstText: 'TEXT 11',
+        secondText: 'TEXT 12'
+    },
+    {
+        firstText: 'TEXT 13',
+        secondText: 'TEXT 14'
+    },
+    {
+        firstText: 'TEXT 15',
+        secondText: 'TEXT 16'
+    }
+];
 
+Insider.eventManager.once(eventName + '.show:campaign:' + variationId, partnerSelectors.seeFaresButton,
+    function () {
+        if (!isControlGroup) {
+            var buttonCheckCount = 0;
 
- sQuery('#ins-question-1619051132990 .ins-survey-selection-row').on('click', function () {
-     setTimeout(function () {
-         var selectedValue = Insider.dom('#ins-question-1619051132990 .ins-survey-selection-row.ins-survey-selection-checked').text().trim();
+            var buttonInterval = setInterval(function () {
+                if (Insider.dom(partnerSelectors.rateButton).exists()) {
+                    var targetElementSelector =  Insider.dom(partnerSelectors.rateButton + ' small').exists() ?
+                        partnerSelectors.rateButton + ' small' : partnerSelectors.rateButton;
 
-         switch (selectedValue) {
-             case 'Hemen Al Otomobilleri':
-                 window.location.href = 'https://www.ikinciyeni.com/garantili-ikinci-el-araba-ilanlari';
-                 break;
-             case 'Günün Otomobilleri':
-                 window.location.href = 'https://www.ikinciyeni.com/ihaledeki-ikinci-el-arabalar-ve-fiyatlari';
-                 break;
-         }
-     }, 500);
- });
+                    Insider.dom(targetElementSelector).text(newRateButtonText).addClass(classes.changeText);
 
- sQuery('#link-button-7406741596772').on('click', function () {
-     setTimeout(function () {
-         var selectedValue = sQuery('[name="ins-option-page-7406741596772"]:checked').val();
-         Insider.dom('#editable-button-3821861407576').attr('style', 'display:none'); //burasi
-         Insider.dom('#editable-button-1619051132990').attr('style', 'display:none');
-         switch (selectedValue) {
+                    clearInterval(buttonInterval);
+                }
 
-             case ' Otomobilimi Değerlemek İstiyorum':
-                 window.location.href = 'https://www.ikinciyeni.com/fiyatlandirici';
-                 break;
-         }
-     })
+                buttonCheckCount++;
 
- });
+                if (buttonCheckCount > 10) {
+                    clearInterval(buttonInterval);
+                }
+            }, 500);
+        }
+
+        Insider.campaign.custom.show(variationId);
+    });
+
+Insider.eventManager.once(eventName + '.change:text:' + variationId, partnerSelectors.rateButton,
+    function () {
+        if (!isControlGroup) {
+            var $modal = Insider.dom(partnerSelectors.modal);
+            var checkCount = 0;
+
+            $modal.find('.modal-header > p').text(newPopupTitle).addClass(classes.changeText);
+
+            var tableInterval = setInterval(function () {
+                if ($modal.find('.modal-body table').exists()) {
+                    var $row = $modal.find('.modal-body table tr:first').clone();
+                         
+                    $row.find('.baggage-rates-price-desc').text('new fisrt text')
+                        .addClass(classes.changeText);
+                    $row.find('.currency-text').text('nes second text')
+                        .addClass(classes.changeText);
+                    $row.find('.baggage-rates-price-text').addClass(classes.changePadding);
+                    $row.find('.currency-value').addClass(classes.hide);
+
+                    Insider.dom('.modal-body table tr:first').before($row);
+
+                    clearInterval(tableInterval);
+                }
+
+                checkCount++;
+
+                if (checkCount > 10) {
+                    clearInterval(tableInterval);
+                }
+            }, 500);
+        }
+
+        Insider.__external.sendCustomGoal(builderId, goalId, true);
+    });
+
+false;
+/* OPT-56149 END */

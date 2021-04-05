@@ -1,19 +1,7 @@
 {
     "conditions": [{
-            "listenUrlChange": true
-        },
-        {
-            "element": [{
-                "selector": "#product-addtocart-button",
-                "checkType": "click"
-            }],
-            "delay": 1000
-        }, {
-            "element": [{
-                "selector": ".fake-tocart",
-                "checkType": "click"
-            }],
-            "delay": 3000
+            "listenUrlChange": true,
+            "delay":500
         }
     ]
 }
