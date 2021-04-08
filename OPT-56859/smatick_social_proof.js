@@ -1,15 +1,22 @@
 /* OPT-56859 START */
+var parameter = Insider.fns.hasParameter('parent/home.html#!/home');
+
+if (parameter) {
+    var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(44);
+    
+    Insider.campaign.webInfo.clearVisibleCampaignsByType('ON-PAGE');
+    Insider.campaign.info.clearVisibleCampaignsByType('ON-PAGE');
+    Insider.campaign.info.show(variationId);
+}
+
 setTimeout(function () {
-    if (Insider.fns.hasParameter('parent/home.html#!/home')) {
-        var newNumber = Math.floor((Math.random() * 70) + 30);
-        var stringValue = newNumber.toString();
-        var socialProofSelector = '.ins-dynamic-element-tag.ins-dynamic-attribute';
+    if (parameter) {
+        var stringValue = (Math.floor((Math.random() * 20) + 40)).toString();
 
-        Insider.dom(socialProofSelector).text(stringValue);
+        Insider.dom('.ins-dynamic-element-tag.ins-dynamic-attribute').text(stringValue);
+        Insider.dom('.ins-preview-wrapper').attr('style', 'left:35%');
     }
-}, 300);
-/* OPT-56859 END */
+}, 100);
 
-Insider.campaign.webInfo.clearVisibleCampaignsByType('ON-PAGE');
-Insider.campaign.info.clearVisibleCampaignsByType('ON-PAGE');
-Insider.campaign.info.show(variationId);
+true;
+/* OPT-56859 END */
