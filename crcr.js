@@ -29,3 +29,58 @@ Insider.__external.changeBannerConfig56656 = function (config) {
 
 true;
 /* OPT-56656 End */
+
+/* OPT-57192 START*/
+(function (self) {
+    var selectors = {
+        email: '.row.ng-scope .email-input input[name=email',
+        checkbox: '.InputGroup--stacked .terms-input input[name=tcAccept]',
+        signUpButton: '.Welcome-back-form[name=unlockSingupForm] .btn',
+    };
+
+    var checkWebsite = Insider.fns.parseURL().pathname.indexOf('/95777') > -1 ? 'kualalumpur' :
+        Insider.fns.parseURL().pathname.indexOf('/110653') > -1 ? 'okinawa' : '';
+
+    self.init = function () {
+        if (checkWebsite === 'kualalumpur' || checkWebsite === 'okinawa') {
+            self.setEvents();
+        }
+    };
+
+    self.setEvents = function () {
+        Insider.eventManager.once('click.ins:signup:57192', selectors.signUpButton, function () {
+            var submitFormControl = Insider.dom(selectors.email).val() !== '' &&
+                Insider.dom(selectors.checkbox).prop('checked');
+
+            if (submitFormControl) {
+                self.sendLeadCollection();
+            }
+        });
+
+    };
+
+    self.sendLeadCollection = function () {
+        Insider.request.post({
+            url: 'https://unification.useinsider.com/api/attribute/v1/update',
+            data: JSON.stringify({
+                partner: Insider.partner.name,
+                source: 'web',
+                users: [{
+                    identifiers: {
+                        em: Insider.dom(selectors.email).val()
+                    },
+                    attributes: {
+                        lid: checkWebsite === 'kualalumpur' ? [4] : [5],
+                        eo: true,
+                        gdpr: true,
+                        co: ''
+                    },
+                    append: true
+                }]
+            })
+        });
+    };
+
+    self.init();
+})({});
+/* OPT-57192 END*/
