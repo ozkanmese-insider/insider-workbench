@@ -2,7 +2,7 @@
 var datasStorage = 'ins-product-data-52715';
 var paidProductsCategories = 'ins-last-paid-products-category-52715';
 var categoryBought = [];
-var datas = (((((dataLayer || []).filter(function(dataLayerItem) {
+var datas = (((((dataLayer || []).filter(function (dataLayerItem) {
     return (dataLayerItem.event === 'cartScreen');
 }) || [])[0] || {}).ecommerce || {}).checkout || {}).products;
 
@@ -21,7 +21,7 @@ if (Insider.systemRules.call('isOnAfterPaymentPage')) {
     var paidProducts = Insider.systemRules.call('getPaidProducts');
     var index;
 
-    for (var i =0; i < productDatas.length; i++) {
+    for (var i = 0; i < productDatas.length; i++) {
         for (var z = 0; z < paidProducts.length; z++) {
             if (productDatas[i].id.indexOf(paidProducts[z].id)) {
                 index = categoryBought.indexOf(productDatas[i].category);
@@ -31,7 +31,7 @@ if (Insider.systemRules.call('isOnAfterPaymentPage')) {
                 }
 
                 categoryBought.push(productDatas[i].category);
-                
+
             }
         }
     }
@@ -40,7 +40,7 @@ if (Insider.systemRules.call('isOnAfterPaymentPage')) {
         name: paidProductsCategories,
         value: JSON.stringify(categoryBought)
     });
-    
+
     JSON.parse(Insider.storage.localStorage.get(paidProductsCategories));
 }
 

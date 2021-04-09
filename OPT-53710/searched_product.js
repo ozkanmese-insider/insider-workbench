@@ -45,6 +45,3 @@
 
 (((Insider.storage.get('ins-last-searched-product-opt53710') || {}).currentProduct || {}).img || '');/* OPT-53710 */
 (((Insider.storage.get('ins-last-searched-product-opt53710') || {}).currentProduct || {}).url || '');/* OPT-53710 */
-
-
-bir daha init lenmesi gerekiyor
