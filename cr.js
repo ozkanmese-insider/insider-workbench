@@ -46,3 +46,109 @@ Insider.eventManager.once('click.add:to:search:opt52363', '.suggestions_panel__p
 
 Insider.storage.localStorage.get(storageName) || '';
 /* OPT-52363 END */
+
+/* OPT-56491 START */
+(function (self) {
+    var builderId = '61';
+    var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(builderId).toString();
+    var isCampaignIsActive = Date.now() < (((Insider.campaign.get(variationId) || {}).activeDateEnd || 0) * 1000);
+    var storageName = 'ins-trigger-whatsapp-hook-opt56491';
+    var storageData = Insider.storage.get(storageName) || {};
+    var whatsAppSettings = Insider.storage.localStorage.get('ins-wa') || {};
+    var storageNameWhatsAppSettings = 'ins-wa-' + variationId;
+
+    self.init = function () {
+        setTimeout(function () {
+            self.setWhatsAppHook();
+            self.setEvents();
+        }, 1000);
+    };
+
+    self.setWhatsAppHook = function () {
+        if (Insider.systemRules.call('isOnProductPage')) {
+            storageData.currentProduct = Insider.systemRules.call('getCurrentProduct') || {};
+        }
+
+        if (whatsAppSettings.isOptedIn && isCampaignIsActive && Insider.storageAccessor.totalCartAmount() === 0 &&
+            storageData.lastSetProductId !== (storageData.currentProduct || {}).id) {
+            Insider.request.post({
+                url: 'https://mercury.api.useinsider.com/v1/message/hook/cart-abandonment/set',
+                data: self.getPayload('set'),
+                success: function () {
+                    Insider.storage.localStorage.set({
+                        name: storageNameWhatsAppSettings,
+                        value: {
+                            message: {
+                                status: true
+                            },
+                            productList: [storageData.currentProduct]
+                        }
+                    });
+
+                    storageData.lastSetProductId = storageData.currentProduct.id;
+
+                    self.setStorageData();
+                },
+            });
+        }
+    };
+
+    self.getPayload = function (type) {
+        var payload = {
+            partnerName: Insider.partner.name,
+            userId: whatsAppSettings.userId,
+            campaignId: variationId,
+            phoneNumber: whatsAppSettings.phoneNumber
+        };
+
+        return type === 'reset' ? payload : Insider.fns.assign(payload, {
+            language: whatsAppSettings.language,
+            productList: '[' + Insider.fns.stringify(storageData.currentProduct) + ']',
+            userAttributes: Insider.fns.stringify(
+                Insider.storage.localStorage.get('ins-default-attributes') || {})
+        });
+    };
+
+    self.setStorageData = function () {
+        Insider.storage.localStorage.set({
+            name: storageName,
+            value: storageData,
+            expires: 999
+        });
+    };
+
+    self.setEvents = function () {
+        Insider.eventManager.off('cart:amount:update.' + variationId)
+            .on('cart:amount:update.' + variationId, function () {
+                if (Insider.storageAccessor.totalCartAmount() > 0 &&
+                    ((Insider.storage.localStorage.get(storageNameWhatsAppSettings) || {}).message || {}).status) {
+                    self.sendResetWhatsAppHookRequest();
+                }
+            });
+    };
+
+    self.sendResetWhatsAppHookRequest = function () {
+        Insider.request.post({
+            url: 'https://mercury.api.useinsider.com/v1/message/hook/cart-abandonment/reset',
+            data: self.getPayload('reset'),
+            success: function () {
+                Insider.storage.localStorage.set({
+                    name: storageNameWhatsAppSettings,
+                    value: {
+                        message: {
+                            status: false
+                        },
+                        productList: []
+                    },
+                });
+
+                Insider.storage.localStorage.remove(storageName);
+            },
+        });
+    };
+
+    self.init();
+})({});
+
+false;
+/* OPT-56491 END */
