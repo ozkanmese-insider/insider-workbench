@@ -1,0 +1,15 @@
+.ins-sticky-cart-container {
+    width: 100%;
+    position: fixed;
+    height: 40px;
+    background-color: red;
+    /* display: inline; */
+    z-index: 999999;
+}
+.ins-sticky-cart-container div {
+    display: inline;
+    padding-left: 5px;
+}
+.ins-sticky-wrapper {
+    margin-left: 71%;
+}
