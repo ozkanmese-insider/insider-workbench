@@ -6,15 +6,13 @@
     ]
 }
 
-
-
 {
     "conditions": [{
         "element": [{
-            "selector": "#product-addtocart-button",
+            "selector": ".option-radios > label.selected",
             "checkType": "click"
         }],
-        "delay": 5000
+        "delay": 500
     }, {
         "element": [{
             "selector": ".fake-tocart",
@@ -23,5 +21,40 @@
         "delay": 4000
     }, {
         "listenUrlChange": true
+    }]
+}
+
+{
+    "conditions": [{
+        "element": [{
+            "selector": ".option-radios > label.selected",
+            "checkType": "click"
+        }],
+        "delay": 500
+    }]
+}
+
+{
+    "conditions": [{
+        "delay": 2000,
+        "listenUrlChange": true
+    }, {
+        "delay": 2000,
+        "element": [{
+            "selector": "#register-panel .message",
+            "checkType": "exists"
+        }]
+    }, {
+        "delay": 2000,
+        "element": [{
+            "selector": ".product-options .property-option.group-colour label:not(.title)",
+            "checkType": "click"
+        }]
+    },{
+        "element": [{
+            "selector": ".option-radios > label",
+            "checkType": "click"
+        }],
+        "delay": 500
     }]
 }

@@ -147,8 +147,7 @@
     self.preventiveCampaignsAreActive = function () {
         if (dekstopVariationId === 'c33' || mobileVariationId === 'c35') {
             exludeCampaignIsActive = excludeCampaignVariationIds.some(function (variationId) {
-                return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0] ||
-                    {}].test || false);
+                return eval(Insider.rules[((Insider.campaign.custom.get(variationId).showIn || {}).trigger || [])[0] || {}].test || false);
             });
         }
     };
@@ -724,3 +723,12 @@ Insider.__external.sendCustomGoalv2 = function (builderId, goalId, checkGoalExis
     self.init();
 })({});
 /* OPT-54459 END */
+
+Insider.__external.sendCustomGoal = function (builderId, goalId) {
+    var goalOfCamp = Insider.goalBuilder.getGoalBuildersByBuilderId(builderId)[goalId];
+    if (typeof goalOfCamp === 'undefined') {
+        return false;
+    }
+    goalOfCamp.goalList[0]['selectorString'] = "true;";
+    Insider.goalBuilder.addGoalTracking();
+};

@@ -122,3 +122,18 @@ self.checkConditions = function () {
 };
 
 self.init();
+
+/* OPT-58058 Start */
+var $productSectionSelector = '.card-product-section-base-col-left';
+var mainWrapperSelector = '.ins-preview-wrapper-' + camp.id;
+
+Insider.fns.onElementLoaded($productSectionSelector, function () {
+    Insider.dom($productSectionSelector).prepend(Insider.dom(mainWrapperSelector));
+
+    Insider.dom(mainWrapperSelector + '.ins-pos-middle-left').css({
+        display: 'block',
+        position: 'absolute',
+        top: '9%'
+    });
+}).listen();
+/* OPT-58058 End */

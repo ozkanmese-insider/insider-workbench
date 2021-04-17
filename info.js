@@ -249,3 +249,22 @@ Insider.__external.sendCustomGoal = function (builderId, goalId, checkGoalExiste
 
 //Example Usage
 Insider.__external.sendCustomGoal(123, 45, true);
+
+Insider.dom('.selector').remove(); /* resetleme fonksiyonu */
+Insider.campaign.all // tüm kampanyaları çekiyor.
+Insider.campaign.userSegment.getActiveVariationByBuilderId('builderId'); // builder id ile variation id bulma.
+Insider.fns.hasParameter('urlparamaeter') // url içindeki parametreyi bulma.
+
+/* GOALLER
+    PAGEVİEW: goal ekliyorsun sonra verdiğin url httpsiz oluyor.
+    custom click: click alacağın eventin içine sendCustomGoal kodunu çağırıyorsun. Sonra freejs e custom goal kodunu yapıştırıyrsun.
+    ÜRÜNLER: customsa girip amele gibi custom rule yazıyorsun. shoecamp varsa kural false dönüyor.
+    segmentler: için custom rule yazıyorsan bunu kullanmak için segmente sadece custom rule ekliyorsun bu kadar.
+    social proof: manipule etmek için domdan elementi seçiyorsun sonra tostring yapıp text i ekliyorsun.
+*/
+
+Insider.dom('selector').addClass('eklenecek class');
+
+var classes = {
+    body: 'ins-falanfilan' + variationId  /// falan filan diye iniyor aşağıya doğru.
+}
