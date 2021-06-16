@@ -1,0 +1,1 @@
+Insider.dom('.product-detail-code-and-delivery').exists();/* OPT-59572 */

@@ -1,0 +1,51 @@
+/* OPT-60201 START */
+.ins-sticky-wrapper-c82 {
+    width: 100%;
+    position: fixed;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid #EAEAEA;
+    z-index: 999999;
+    padding:1%;
+    opacity: 98%;
+}
+
+.ins-product-name-c82 {
+    margin-right:2%;
+    float: right;
+    font-weight:600;
+}
+
+.ins-product-price-c82 {
+    float: right;
+    margin-right:2%;
+    font-weight:normal;
+}
+
+.ins-product-colour-c82 {
+    float: right;
+    margin-right: 2%;
+    font-weight:normal;
+}
+
+.ins-add-to-cart-button-c82 {
+    display:inline;
+    float:right;
+    background:#1D3058;
+    padding:9px 89px;
+    margin-top: -0.6%;
+    margin-right: 2%;
+    min-width:300px
+}
+
+.ins-add-to-cart-button-c82:hover {
+    background: #263F74;
+}
+
+.ins-add-to-cart-button-c82  button{
+    color:white;
+    font-family: Poppins;
+    font-size: 18px;
+    letter-spacing: 1.5px;
+}
+/* OPT-60201 END */

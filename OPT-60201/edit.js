@@ -1,53 +1,3 @@
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 1,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 2,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 3,
-    addTocartButtonText: 'BACK TO DETAILS'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 4,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 5,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 6,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 7,
-    addTocartButtonText: 'BACK TO DETAILS'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 8,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-typeof Insider.__external.createAddToCartConfig === 'function' &&
-    Insider.__external.createAddToCartConfig(addToCartConfig);
 /* OPT-57570  START */
 Insider.__external.createAddToCartConfig = function (addToCartConfig) {
     var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(addToCartConfig.builderId);
@@ -121,10 +71,13 @@ Insider.__external.createAddToCartConfig = function (addToCartConfig) {
                 config.push(' ');
             }
 
-            Insider.dom('.' + classes.addtocart).after(
-                '<div class="' + classes.productFit + '">' + config[2] + '</div>' +
-                '<div class="' + classes.productSize + '">Size: ' + config[1] + '</div>'
-            );
+            if (config[1] !== '') {
+                Insider.dom('.' + classes.addtocart).after(
+                    '<div class="' + classes.productFit + '">' + config[2] + '</div>' +
+                    '<div class="' + classes.productSize + '">Size: ' + config[1] + '</div>'
+                );
+            }
+
         }
 
         Insider.dom('.' + classes.addtocart).after(

@@ -1,53 +1,3 @@
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 1,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 2,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 3,
-    addTocartButtonText: 'BACK TO DETAILS'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 4,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 5,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 6,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 7,
-    addTocartButtonText: 'BACK TO DETAILS'
-};
-
-var addToCartConfig = {
-    builderId: 57,
-    configuration: 8,
-    addTocartButtonText: 'ADD TO BAG'
-};
-
-typeof Insider.__external.createAddToCartConfig === 'function' &&
-    Insider.__external.createAddToCartConfig(addToCartConfig);
 /* OPT-57570  START */
 Insider.__external.createAddToCartConfig = function (addToCartConfig) {
     var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(addToCartConfig.builderId);
@@ -67,12 +17,24 @@ Insider.__external.createAddToCartConfig = function (addToCartConfig) {
     };
     var singleDropBar = '#single-drop-option-group-length_chzn';
     var self = this;
+    var customChatButton = '.custom-chat-btn'; /* OPT-60201 */
 
     self.init = function () {
         if (!isControlGroup) {
             self.removePartnersButton();
             self.reset();
             Insider.dom('#products-option').prepend(self.generalHTML());
+
+            /* OPT-60201  START */
+            if (addToCartConfig.configuration === 5 || addToCartConfig.configuration === 6 ||
+                addToCartConfig.configuration === 7 || addToCartConfig.configuration === 8) {
+                Insider.dom('.' + classes.wrapper).attr('style', 'display:none;');
+            } else {
+                Insider.fns.onElementLoaded(customChatButton, function () {
+                    Insider.dom(customChatButton).attr('style', 'margin-bottom:40px');
+                }).listen();
+            }
+            /* OPT-60201 END */
             self.checkProductNameLength();
             self.addHTML(self.getProductInformation());
             self.listenProductChange();
@@ -121,10 +83,14 @@ Insider.__external.createAddToCartConfig = function (addToCartConfig) {
                 config.push(' ');
             }
 
-            Insider.dom('.' + classes.addtocart).after(
-                '<div class="' + classes.productFit + '">' + config[2] + '</div>' +
-                '<div class="' + classes.productSize + '">Size: ' + config[1] + '</div>'
-            );
+            /* OPT- 60201 START */
+            if (config[1] !== '') {
+                Insider.dom('.' + classes.addtocart).after(
+                    '<div class="' + classes.productFit + '">' + config[2] + '</div>' +
+                    '<div class="' + classes.productSize + '">Size: ' + config[1] + '</div>'
+                );
+            }
+            /* OPT-60201 END */
         }
 
         Insider.dom('.' + classes.addtocart).after(
@@ -166,6 +132,13 @@ Insider.__external.createAddToCartConfig = function (addToCartConfig) {
                     Insider.dom('.' + classes.productFit).remove();
                 }
 
+                /* OPT-60201 START */
+                if (addToCartConfig.configuration === 2) {
+                    if (productInformation[1] !== '') {
+                        Insider.dom('.' + classes.addtocart).attr('style', 'background:#6B9848;');
+                    }
+                }
+                /* OPT-60201 END */
                 self.addHTML(productInformation);
             }, 600);
         });
@@ -191,22 +164,24 @@ Insider.__external.createAddToCartConfig = function (addToCartConfig) {
     };
 
     self.setPositionEvent = function () {
+        /* OPT-60201 START */
         Insider.eventManager.once('scroll.' + variationId, function () {
             Insider.eventManager.once('scroll.1' + variationId, function () {
                 if (Insider.dom('#static-hover').attr('class') === 'hovering') {
-                    Insider.dom('.' + classes.wrapper).attr('style', 'position: fixed;margin-top:97px');
+                    Insider.dom('.' + classes.wrapper).attr('style', 'position: fixed;margin-top:97px;display:unset;');
                     Insider.dom('#header').attr('style', 'z-index:1050');
                 } else {
-                    Insider.dom('.' + classes.wrapper).attr('style', 'position: static;');
+                    Insider.dom('.' + classes.wrapper).attr('style', 'position: static;display:none;');
                 }
             });
         });
+        /* OPT-60201 END */
     };
 
     self.addToCartEvent = function () {
-
         Insider.eventManager.once('click.add:cart:57750' + variationId, '.' + classes.addtocart,
             function () {
+                /* OPT-60201  START */
                 if (addToCartConfig.configuration === 1 || addToCartConfig.configuration === 2 ||
                     addToCartConfig.configuration === 4 || addToCartConfig.configuration === 5 ||
                     addToCartConfig.configuration === 6 || addToCartConfig.configuration === 8) {
@@ -221,6 +196,7 @@ Insider.__external.createAddToCartConfig = function (addToCartConfig) {
                             product: Insider.systemRules.call('getCurrentProduct')
                         });
                 }
+                /* OPT-60201 END */
                 window.scrollTo(0, 0);
             });
 

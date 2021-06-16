@@ -1,4 +1,4 @@
-var viewedArticleData = JSON.parse(spApi.storageData('ins-viewed-article-count') || '{}');
+/* var viewedArticleData = JSON.parse(spApi.storageData('ins-viewed-article-count') || '{}');
 var now = new Date().getTime();
 var oneMonthInMilliseconds = 1000 * 60 * 60 * 24 * 30;
 var afterOneMonth = now + oneMonthInMilliseconds;
@@ -20,7 +20,7 @@ if (spApi.isOnProductPage()) {
 viewedArticleData.viewCount;
 
 /* OPT-58113 START */
-var storageName = 'ins-viewed-article-count-58113';
+/* var storageName = 'ins-viewed-article-count-58113';
 var viewedArticleCount = Insider.storage.localStorage.get(storageName) || 0;
 
 if (Insider.fns.hasParameter('/article/')) {
@@ -31,5 +31,27 @@ if (Insider.fns.hasParameter('/article/')) {
     });
 }
 
-Insider.storage.get(storageName) || 0;
+Insider.storage.get(storageName) || 0; */
 /* OPT-58113 */
+/* OPT-58113 START */
+var dateArray = Insider.dateHelper.getDateString().split(' ');
+var storageName = 'ins-viewed-article-count-581133';
+var viewedArticleCount = Insider.storage.localStorage.get(storageName) || 0;
+
+if (dateArray[3] === '01') {
+    if (Insider.fns.hasParameter('/article/')) {
+        viewedArticleCount = 0;
+    }
+} else {
+    if (Insider.fns.hasParameter('/article/')) {
+        viewedArticleCount = viewedArticleCount + 1;
+    }
+}
+
+Insider.storage.localStorage.set({
+    name: storageName,
+    value: viewedArticleCount
+});
+
+Insider.storage.get(storageName) || 0;
+/* OPT-58113 END */

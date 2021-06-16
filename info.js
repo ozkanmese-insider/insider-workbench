@@ -78,9 +78,6 @@ Insider.fns.onElementLoaded(button, function () {
 }).listen();
 
 (function (self) {
-    var variationId = $ {
-        1 | c1, 1
-    };
     self.init = function () {
         self.reset();
         self.buildHtml();
@@ -244,6 +241,7 @@ Insider.__external.sendCustomGoal = function (builderId, goalId, checkGoalExiste
     }
 
     goalOfCamp.goalList[0]['selectorString'] = 'true';
+
     Insider.goalBuilder.addGoalTracking();
 };
 
@@ -266,5 +264,5 @@ Insider.fns.hasParameter('urlparamaeter') // url içindeki parametreyi bulma.
 Insider.dom('selector').addClass('eklenecek class');
 
 var classes = {
-    body: 'ins-falanfilan' + variationId  /// falan filan diye iniyor aşağıya doğru.
+    body: 'ins-falanfilan' + variationId /// falan filan diye iniyor aşağıya doğru.
 }

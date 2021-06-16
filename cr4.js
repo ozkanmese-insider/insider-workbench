@@ -1,132 +1,73 @@
-/* OPT-53961 START */
 (function (self) {
-    var campaignsInformation = {
-        campaignDetails: {
-            yogurt: {
-                builderId: 3594,
-                searchKey: 'Yoğurt',
-                gif: 'https://image.useinsider.com/dominos/c761/118dL3aX1xJS1vy5p4Ll1556201216.gif'
-            },
-            sufle: {
-                builderId: 3630,
-                searchKey: 'Sufle',
-                gif: 'https://image.useinsider.com/dominos/c823/Cjk70spybzlkDCDqVssA1571911074.gif'
-            },
-            cocaCola: {
-                builderId: 3629,
-                searchKey: 'Coca-Cola Pet 1 lt',
-                gif: 'https://image.useinsider.com/dominos/c819/Untj3P3dWuLdWJvob8Xq1571910664.gif '
-            },
-            citirTavuk: {
-                builderId: 3631,
-                searchKey: 'Çıtır Tavuk Topları',
-                gif: 'https://image.useinsider.com/dominos/c821/FbUKzZLKch9pHhw0A7wX1571910893.gif'
-            }
-        }
+    var builderId = !Insider.browser.isMobile() ? 1171 : 1172;
+    var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(builderId);
+    var productIdList = ['10364797', '10364797', '40452085', '70452079', '70452079',
+        '30452081', '30452081', '20452091', '20452091', '80452093', '80452093',
+        '30452095', '30452095', '10452096', '10452096', '50453602', '50453602',
+        '80452088', '80452088', '452092', '452092', '10460751', '10460751',
+        '60452089', '70452098', '70452098', '70408595', '364477',
+        '70429913', '70429913', '80424255', '80424255', '364477'];
+    var classes = {
+        excluded: 'ins-custom-exlude-' + variationId,
+        hide: 'ins-custom-hide-button-' + variationId,
+        style: 'ins-custom-style-' + variationId
     };
-
-    var detectedCampaignInformation = {
-        goalId: 452,
-        builderId: '',
-        variationId: '',
-        searchKey: '',
-        searchOnLastPurchaseCount: 3
-    };
+    var isShown = false;
 
     self.init = function () {
-        self.changeCampaignBuilderId();
-        self.setDetectedCampaign();
-        self.showCampaign();
-        self.setGoal();
-
-        return false;
-    };
-
-    self.changeCampaignBuilderId = function () {
-        if (Insider.browser.isMobile()) {
-            campaignsInformation.campaignDetails.yogurt.builderId = 3628;
-            campaignsInformation.campaignDetails.sufle.builderId = 3634;
-            campaignsInformation.campaignDetails.cocaCola.builderId = 3633;
-            campaignsInformation.campaignDetails.citirTavuk.builderId = 3635;
+        if (!Insider.campaign.isControlGroup(variationId)) {
+            self.reset();
+            self.addStyle();
+            self.removeAddToCart();
         }
     };
 
-    self.setDetectedCampaign = function () {
-        var foundCampaignInformation = false;
+    self.reset = function () {
+        Insider.dom('.' + classes.style).remove();
+    };
 
-        Object.keys(campaignsInformation.campaignDetails).some(function (key) {
-            if (typeof Insider.__external.checkLastPurchasedProductOPT51641 === 'function' &&
-                Insider.__external.checkLastPurchasedProductOPT51641(
-                    campaignsInformation.campaignDetails[key].searchKey,
-                    detectedCampaignInformation.searchOnLastPurchaseCount)) {
-                foundCampaignInformation = key;
+    self.addStyle = function () {
+        var style = '.' + classes.hide + '{ display:none !important; }';
 
-                return true;
-            }
-        });
+        Insider.dom('<style>').addClass(classes.style).html(style).appendTo('head');
+    };
 
-        if (foundCampaignInformation) {
-            detectedCampaignInformation.builderId =
-                campaignsInformation.campaignDetails[foundCampaignInformation].builderId;
-            detectedCampaignInformation.variationId =
-                Insider.campaign.userSegment.getActiveVariationByBuilderId(detectedCampaignInformation.builderId);
-            detectedCampaignInformation.searchKey =
-                campaignsInformation.campaignDetails[foundCampaignInformation].searchKey;
-            detectedCampaignInformation.gif =
-                campaignsInformation.campaignDetails[foundCampaignInformation].gif;
+    self.getProductList = function () {
+        if (Insider.systemRules.call('isOnCategoryPage')) {
+            return Insider.systemRules.call('getProductList').isOnCategoryPage();
+        } else if (Insider.systemRules.call('isOnProductPage')) {
+            return Insider.systemRules.call('getProductList').isOnProductPage();
         }
+
+        return Insider.systemRules.call('getProductList').isOnMainPage();
     };
 
-    self.showCampaign = function () {
-        if (Insider.systemRules.call('isOnCartPage')) {
-            Insider.campaign.custom.show(detectedCampaignInformation.variationId);
-            self.writeLogger('CAMPAIGN IS SHOWN', '');
+    self.removeAddToCart = function () {
+        var buttonClass = '.range-revamp-product-compact__add-to-cart-button';
+        var productList = self.getProductList();
 
-            if (!Insider.campaign.isControlGroup(detectedCampaignInformation.variationId)) {
-                self.setCampaignChanges();
+        Insider.dom(buttonClass).addClass(classes.excluded);
 
-                self.writeLogger('SLIDER CHANGED', '');
-            }
-        }
-    };
+        if (productList) {
+            productList.forEach(function (product) {
+                if (productIdList.indexOf(product.id) > -1) {
+                    Insider.dom(buttonClass, product.path).addClass(classes.hide);
 
-    self.writeLogger = function (prefix, suffix) {
-        Insider.logger.log('********************OPT-53961****************\n' +
-            prefix + '\n searchKey : ' + detectedCampaignInformation.searchKey +
-            '\n bid:' + detectedCampaignInformation.builderId +
-            '\n vid:' + detectedCampaignInformation.variationId +
-            '\n ' + suffix);
-    };
-
-    self.setCampaignChanges = function () {
-        if (typeof Insider.__external.changePartnerRecommendationOPT51641 === 'function') {
-            Insider.__external.changePartnerRecommendationOPT51641({
-                productText: detectedCampaignInformation.searchKey,
-                variationId: detectedCampaignInformation.variationId,
-                gif: detectedCampaignInformation.gif
+                    if (!isShown) {
+                        isShown = Insider.campaign.custom.show(variationId);
+                    }
+                }
             });
         }
+
+        Insider.fns.onElementLoaded(buttonClass + ':not(.' + classes.excluded + ')', function () {
+            setTimeout(function () {
+                self.removeAddToCart();
+            }, 1000);
+        }).listen();
     };
 
-    self.setGoal = function () {
-        if (Insider.systemRules.call('isOnAfterPaymentPage') &&
-            JSON.stringify(Insider.storageAccessor.paidProducts()).indexOf(detectedCampaignInformation.searchKey)) {
-            Insider.goalBuilder.manage({
-                builderId: detectedCampaignInformation.builderId,
-                variationId: detectedCampaignInformation.variationId,
-                goalId: detectedCampaignInformation.goalId,
-                subId: Insider.dateHelper.now(),
-                logType: 'join',
-                goalType: 'rules',
-                selectorString: 'true',
-                expectedMatching: 'true'
-            });
-
-            self.writeLogger('CUSTOM SALES GOAL WORKED ', detectedCampaignInformation.goalId +
-                ' -->Goal is Sended');
-        }
-    };
-
-    return self.init();
+    self.init();
 })({});
-/* OPT-53961 END */
+
+false;

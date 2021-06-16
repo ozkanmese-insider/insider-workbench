@@ -108,12 +108,13 @@
         }
     ];
 
-    Insider.storage.session.get(storageName) === null && Insider.storage.session.set({
+    Insider.storage.localStorage.get(storageName) === null && Insider.storage.set({
         name: storageName,
         value: formInformation,
-    }); /* OPT-61396 */
+        expires: Insider.dateHelper.addDay(365)
+    }, 'localStorage', false);
 
-    var formAbandonedStorage = Insider.storage.session.get(storageName); /* OPT-61396 */
+    var formAbandonedStorage = Insider.storage.localStorage.get(storageName);
 
     self.init = function () {
         if (Insider.systemRules.call('isOnCartPage') || Insider.fns.hasParameter('/contact-form') ||
@@ -126,7 +127,7 @@
             });
 
             Insider.utils.onFastScroll(function () {
-                formAbandonedStorage = Insider.storage.session.get(storageName); /* OPT-61396 */
+                formAbandonedStorage = Insider.storage.localStorage.get(storageName);
 
                 formAbandonedStorage.some(function (form) {
                     if (window.location.pathname === form.formEntranceUrl) {
@@ -159,10 +160,11 @@
     };
 
     self.setFormAbandonedStorage = function () {
-        Insider.storage.session.set({ /* OPT-61396 */
+        Insider.storage.set({
             name: storageName,
             value: formAbandonedStorage,
-        });
+            expires: Insider.dateHelper.addDay(365)
+        }, 'localStorage', false);
     };
 
     self.init();
@@ -170,5 +172,3 @@
 
 false;
 /* OPT-59164 End */
-Insider.dom('#product_page_product_size').val() ||
-Insider.dom('#group_5 option:not([data-stock="disabled"],:disabled)').val() || '';
