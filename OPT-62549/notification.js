@@ -37,7 +37,7 @@
                             Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
 
                             Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:9rem !important');
+                                notificationContentStyle + 'margin-left:9rem !important;z-index:99');
 
                             Insider.dom(selectors.hidedElement).hide();
                             break;
@@ -180,4 +180,3 @@ Insider.fns.onElementLoaded(Insider.__external.notificationWrapper62549, functio
     }, 450);
 }).listen();
 /* OPT-62549 END */
-

@@ -62,6 +62,7 @@
             function () {
                 self.reset();
                 self.sendCustomGoal(13);
+
             });
     };
 
@@ -72,9 +73,9 @@
     self.checkConditionsToShow = function () {
         //  Insider.campaign.custom.show(variationId);
         if (Insider.fns.hasParameter('booking/select/')) {
-            if (!Insider.dom('.searchresult_date_description_return').exists()) {
+            if (Insider.dom('.searchresult_date_description_return').exists()) {
                 Insider.eventManager.once('click.select:fly:' + variationId,
-                    '.fare_button_label.ng-star-inserted:eq(0)',
+                    '.fare_button_label.ng-star-inserted:eq()',
                     function () {
                         self.init();
                     });
