@@ -1,160 +1,207 @@
+/* OPT-62004 Start */
 (function (self) {
-    var skuIds = ['76576W.BLK', '13070W.WSL', '13070W.BKRG', '22823W.WSL', '22604W.BBK', '104008W.BKHP', '104008W.GYCL',
-        '15601W.BBK', '15400W.BBK', '15901W.NVW', '15902W.BBK', '15901W.BBK', '12775W.BBK', '15601W.GYBL', '204105ww.blk', '204105ww.choc',
-        '15400W.NVGY', '52649W.BBK', '58350W.BBK', '55509EWW.BBK', '55510EWW.BBK', '55510EWW.NVY', '65981W.TPE', '302023WL.MLT',
-        '52787W.BBK', '52787W.CHAR', '52787W.NVRD', '52984EWW.BBK', '65693W.CDB', '55098EWW.BBK', '220034WW.GYNV',
-        '52649W.NVY', '64943W.BLK', '232057W.BBK', '232057W.RDBK', '52504W.BBK', '65981W.NVY', '52531W.BBK', '52649w.char',
-        '232040WW.GYNV', '232040WW.NVY', '16701W.BBK', '16701W.NVGY', '52531W.BBK', '52631W.NVY', '55509EWW.CCBK',
-        '52631W.BKRD', '65908W.TPE', '55510EWW.CHAR', '52531W.BBK', '52631W.BKRD', '52631W.NVY', '52504W.BBK',
-        '52504W.BLK', '232057W.BBK', '232057W.RDBK', '65355EWW.CHAR', '64943W.BLK', '64943W.KHK', '65981W.TPE',
-        '104008W.BKHP', '104008W.GYCL', '23487W.TPE', '65693W.cdb', '23487W.TPE', '33218W.BLK', '23487W.NVY', '149203W.LGPK', '15905W.NVW', '149057W.BBK', '232063WW.NVBL', '23945W.NVY', '23945W.PNK', '77210W.BLK', '51893EWW.GYW', '52504W.NVY', '52927EWW.CCBK', '66384W.BRN', '100033W.GRY', '100033W.WHT', '104009W.LPD', '23958W.NVY', '31440w.olv', '13106w.bbk', '149149w.tpe', '23945w.pnk', '13260w.wsl', '13264w.bbk', '23312w.nvy', '77254w.blk', '32504w.wht', '149149w.tppk', '52630w.bbk', '77068w.bkgy', '77130w.blk', '77509w.blk', '232018ww.char', '76536w.bbk', '216008ww.khk', '66272w.blk', '216008ww.khk', '76536w.bbk', '55509eww.gry', '12841W.pur', '31440W.ras', '31440W.slt'
-    ];
-    /* OPT-40479 START */
-    var builderIds = {
-        categoryPage: {
-            mobile: 16,
-            desktop: 15
-        },
-        searchPage: {
-            mobile: 28,
-            desktop: 27
-        },
-    };
+    var revivalProduct = JSON.parse((Insider.storageAccessor.customAttributes() || {})
+        .last_visited_revival_product || '');
+    var vintageProduct = JSON.parse((Insider.storageAccessor.customAttributes() || {})
+        .last_visited_vintage_product || '');
+    var cartProduct = ((Insider.storageAccessor.cartProductList() || {}).productList || {})[0] || [];
+    var activeProduct;
+    var builderId;
 
-    var isOnCategoryPage = Insider.systemRules.call('isOnCategoryPage');
-    var isOnSearchPage = Insider.fns.hasParameter('/search/');
-    var isMobile = Insider.browser.isMobile();
-    var builderId = isMobile ? builderIds.categoryPage.mobile : builderIds.categoryPage.desktop;
-
-    if (isOnSearchPage) {
-        builderId = isMobile ? builderIds.searchPage.mobile : builderIds.searchPage.desktop;
+    if (Insider.systemRules.call('getCartCount')) {
+        activeProduct = cartProduct;
+        builderId = 50;
+    } else if (vintageProduct) {
+        activeProduct = vintageProduct;
+        builderId = 52;
+    } else {
+        activeProduct = revivalProduct;
+        builderId = 51;
     }
-    /* OPT-40479 END */
+
     var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(builderId);
-    var campaign = Insider.campaign.get(variationId);
-    /* OPT-43654 START */
-    var isValidLanguage = (campaign.lang || []).indexOf('all_ALL') > -1 ||
-        (campaign.lang || []).indexOf(Insider.systemRules.call('getLang')) > -1;
-    /* OPT-43654 END */
-    var isControlGroup = Insider.campaign.isControlGroup(variationId);
-    var badgeImageUrl = '//image.useinsider.com/skechersau/defaultImageLibrary/wide-fit-skx-badge-1596001972.png';
-    var isShownCampaign = false;
-    var isJoinedCamp = (Insider.storage.localStorage.get('sp-camp-' + variationId) || {}).joined || false;
-
     var className = {
-        badgeAdded: 'ins-badge-added-' + variationId,
-        customBadge: 'ins-custom-badge-' + variationId
+        style: 'ins-custom-pop-up-style-' + variationId,
+        popup: 'ins-custom-pop-up-' + variationId + ' sp-custom-' + variationId
     };
-
-    var selector = {
-        mainWrapper: '.main-wrapper .column.main',
-        productWrapper: '.products.wrapper .product-item-photo'
-    };
-
-    var goalId = {
-        sales: 8,
-        pageView: 9,
-        addToCart: 10
-    };
+    var storageName = 'ins-popup-closed-' + variationId;
 
     self.init = function () {
-        self.reset();
-        self.updateSkuList();
-
-        if (isOnCategoryPage || isOnSearchPage) {
-            /* OPT-40479 */
-            self.checkProductsForBadge();
-            self.trackLazyLoading();
-            self.checkAfterTheTime();
-        } else if (Insider.systemRules.call('isOnProductPage') && isJoinedCamp) {
-            self.setProductPageGoals();
-        } else if (Insider.systemRules.call('isOnAfterPaymentPage') && isJoinedCamp) {
-            self.checkSalesGoal();
-        }
-
-        return true; /* OPT-40479 */
+        self.remove();
+        self.buildHtml();
+        self.setEvents();
     };
 
-    self.reset = function () {
-        Insider.dom('.' + className.customBadge).remove();
-        Insider.dom('.' + className.badgeAdded).removeClass(className.badgeAdded);
+    self.remove = function () {
+        Insider.dom('.' + className.style).remove();
+        Insider.dom('.' + className.popup).remove();
     };
 
-    self.updateSkuList = function () {
-        skuIds = skuIds.map(function (skuId) {
-            return skuId.toLowerCase().replace('.', '-');
-        });
+    self.buildHtml = function () {
+        Insider.dom('body').append('<div class="' + className.popup + '">' +
+            '<div style="line-height: normal; width: 511px;height: 461px;background-color: #fff;overflow: hidden;z-index: 10;position: fixed;margin-left: auto;margin-right: auto;left: 0;right: 0;top: 0;text-align: center;transform: translate(0%, 50%);" class="ins-custom-wrapper">' +
+            '    <form id="question-group-form">' +
+            '        <div class="swiper-container swiper-container-horizontal" style="width: 100%; height: 100%;">' +
+            '            <div class="swiper-wrapper">' +
+            '                <div class="swiper-slide" style="width: 511px; height: 461px; border-color: rgb(255, 255, 255);">' +
+            '                    <div class="ui-resizable-handle ui-resizable-se ui-icon ui-icon-gripsmall-diagonal-se" style="z-index: 90; display: none;"></div>' +
+            '                    <div id="wrap-text-1619615021414" class=" element-text" style="position: absolute; left: 140px; top: 20px; z-index: 1;">' +
+            '                        <div id="text-1619615021414" style="width: auto; height: auto; min-height: 29px; padding: 5px; font-family: Roboto, sans-serif; box-shadow: none;">' +
+            '                            <div id="editable-text-1619615021414" style="outline: none; overflow-wrap: break-word; word-break: break-word;">' +
+            '                                <div style="text-align: center;"><span style="color:#262e3d;"><strong><span style="font-size:30px;"><span style="font-family:iransans-light !important;">Don&apos;t miss' +
+            '                                                    out.</span></span></strong></span></div>' +
+            '                            </div>' +
+            '                        </div>' +
+            '                    </div>' +
+            '                    <div id="wrap-text-1619615792380" class=" element-text" style="position: absolute; left: 150px; top: 70px; z-index: 1;">' +
+            '                        <div id="text-1619615792380" style="width: 198px; height: auto; min-height: 29px; padding: 5px; font-family: Roboto, sans-serif; box-shadow: none;">' +
+            '                            <div id="editable-text-1619615792380" style="outline: none; overflow-wrap: break-word; word-break: break-word;">' +
+            '                                <div style="text-align: center;"><span style="font-size:14px;"><span style="color: #22262C; font-family: Roboto, sans-serif !important;">Produced in small batches</span></span></div>' +
+            '                            </div>' +
+            '                        </div>' +
+            '                    </div>' +
+            '                    <div id="wrap-button-1619616114001" class=" element-button" style="position: absolute; left: 120px; top: 340px; z-index: 1;">' +
+            '                        <div id="button-1619616114001" style="width: 119px; height: 38px; background-color: rgb(255, 255, 255); font-family: Roboto, sans-serif; opacity: 1; border-width: 1px; border-color: rgb(38, 46, 61); border-style: solid; box-shadow: none;">' +
+            '                            <a id="link-button-1619616114001" class="element-link" href="#" slide-type="none" style="width: 100%; height: 100%; display: table; color: rgb(255, 255, 255);">' +
+            '                                <div id="editable-button-1619616114001" style="width: 100%; height: 100%; outline: none; overflow-wrap: break-word; word-break: break-word; display: table-cell; vertical-align: middle; color: rgb(255, 255, 255);">' +
+            '                                    <div style="text-align: center;"><span style="color:#262e3d;"><span style="font-size: 14px; font-family: Roboto, sans-serif !important;">Wishlist</span></span></div>' +
+            '                                </div>' +
+            '                            </a></div>' +
+            '                    </div>' +
+            '                    <div id="wrap-button-1619616133608" class=" element-button" style="position: absolute; left: 270px; top: 340px; z-index: 1;">' +
+            '                        <div id="button-1619616133608" style="width: 119px; height: 38px; background-color: rgb(177, 78, 46); font-family: Roboto, sans-serif; border-style: solid; border-width: 1px; border-color: rgb(177, 78, 46); box-shadow: none;">' +
+            '                            <a id="link-button-1619616133608" class="element-link" href="#" slide-type="none" style="width: 100%; height: 100%; display: table; color: rgb(255, 255, 255);">' +
+            '                                <div id="editable-button-1619616133608" style="width: 100%; height: 100%; outline: none; overflow-wrap: break-word; word-break: break-word; display: table-cell; vertical-align: middle; color: rgb(255, 255, 255);">' +
+            '                                    <div style="text-align: center;"><span style="font-size: 14px; font-family: Roboto, sans-serif !important;">Checkout</span>' +
+            '                                    </div>' +
+            '                                </div>' +
+            '                            </a></div>' +
+            '                    </div>' +
+            '                    <div id="wrap-text-1619616740750" class=" element-text" style="transform: translate(-50%, 0); position: absolute; left: 50%; top: 280px; z-index: 1;">' +
+            '                        <div id="text-1619616740750" style="width: auto; height: auto; min-height: 29px; padding: 5px; font-family: Roboto, sans-serif; border-color: rgb(0, 0, 0);">' +
+            '                            <div id="editable-text-1619616740750" style="outline: none; overflow-wrap: break-word; word-break: break-word;">' +
+            '                                <div style="text-align: center;"><span style="color:#262e3d;"><span style="font-size:14px;"><span style="font-size:18px; font-family: Roboto, sans-serif !important;">' + activeProduct.name +
+            '<br><strong style="font-size:18px; font-family: Roboto, sans-serif !important;">&ZeroWidthSpace;$' + activeProduct.price + '</strong></span><br></span></span>' +
+            '                                </div>' +
+            '                            </div>' +
+            '                        </div>' +
+            '                    </div>' +
+            '                    <div id="wrap-image-1619617522977" class=" element-image" style="position: absolute; left: 130px; top: 110px; z-index: 1;">' +
+            '                        <div id="image-1619617522977" style="overflow: hidden; width: 249px; height: 158px; box-shadow: none;"><a href="' + activeProduct.url + '" id="link-image-1619617522977" class="element-link" style="width: 100%; height: 100%; display: block; color: rgb(255, 255, 255);"><img src="' + activeProduct.img + '" id="img-image-1619617522977" class="element-image" style="display: block; width: 100%; height: 100%;"></a></div>' +
+            '                    </div>' +
+            '                    <div id="wrap-button-1619697695905" class=" element-button ajax-submit" style="position: absolute; left: 140px; top: 390px; z-index: 1;">' +
+            '                        <div id="button-1619697695905" style="width: 229px; height: 40px; background-color: rgb(255, 255, 255); font-family: Roboto, sans-serif; border-width: 0px; opacity: 1;">' +
+            '                            <a id="link-button-1619697695905" class="element-link" href="https://www.revivalrugs.com/pages/design-support" slide-type="none" style="width: 100%; height: 100%; display: table; color: rgb(255, 255, 255);">' +
+            '                                <div id="editable-button-1619697695905" style="width: 100%; height: 100%; outline: none; overflow-wrap: break-word; word-break: break-word; display: table-cell; vertical-align: middle; color: rgb(255, 255, 255);">' +
+            '                                    <div style="text-align: center;"><span style="color:#20323d;"><span style="font-size: 12px; font-family: Roboto, sans-serif !important;">Not sure? Get' +
+            '                                                a <strong><u style="font-family: Roboto, sans-serif !important;">&ZeroWidthSpace;free design' +
+            '                                                        consulation.</u></strong></span></span></div>' +
+            '                                </div>' +
+            '                            </a></div>' +
+            '                    </div>' +
+            '                </div>' +
+            '            </div>' +
+            '        </div>' +
+            '    </form>' +
+            '    <div id="wrap-close-button-1619101761293" class=" element-close-button" style="position: absolute;left: 485px;top: 6px;z-index: 1;">' +
+            '        <div id="close-button-1619101761293" class="element-content" style="width: auto; height: auto; color: rgb(28, 51, 63); text-align: center; cursor: pointer; font-size: 17px; line-height: 1; opacity: 1;">' +
+            '            <i class="fa fa-times element-close-button" id="icon-close-button-1619101761293" style="' +
+            'box-sizing: inherit;' +
+            '"></i></div>' +
+            '    </div>' +
+            '</div>' +
+            '<div class="ins-custom-overlay"></div>' +
+            '</div>');
+
+        Insider.dom('head').append('<style class="' + className.style + '"> .ins-custom-overlay{' +
+            'position: fixed; top: 0; left: 0; height: 100%; width: 100%; z-index: 9; background: black; opacity: 0.6;}' +
+            '.fa-times:before {content: "\f00d";}*swiper-pagination-wrap{bottom:10px;top:auto!important}' +
+            '@font-face{font-family:IRANSans-Light;src:local(&apos;IRANSans-Light&apos;);' +
+            'src:url(https://font.static.useinsider.com/IRANSans/IRANSans-Light.eot);' +
+            'src:url(https://font.static.useinsider.com/IRANSans/IRANSans-Light.eot?#iefix) format(&apos;embedded-opentype&apos;),' +
+            'url(https://font.static.useinsider.com/IRANSans/IRANSans-Light.woff2) format(&apos;woff2&apos;),' +
+            'url(https://font.static.useinsider.com/IRANSans/IRANSans-Light.woff) format(&apos;woff&apos;),' +
+            'url(https://font.static.useinsider.com/IRANSans/IRANSans-Light.ttf) format(&apos;truetype&apos;);font-weight:300;font-style:normal}' +
+            '.swiper-pagination-bullet { background: #000000; color: #000000;}' +
+            '.swiper-pagination-bullet-active { background: #007AFF!important; color: #007AFF;}' +
+            '.swiper-button-next, .swiper-button-prev { color: #007AFF!important}</style>');
+
+        Insider.dom('head').append('<link class="swiper-style-class" rel="stylesheet"' +
+            ' href="https://assets.api.useinsider.com/fonts/font-awesome/css/font-awesome.css" type="text/css" media="screen">');
     };
 
-    /* OPT-54057 START */
-    self.checkProductsForBadge = function () {
-        skuIds.forEach(function (skuId) {
-            self.findBadgedWrapper(skuId);
-        });
-    };
+    self.setEvents = function () {
+        Insider.eventManager.once('click.add:to:cart:button:' + variationId, '#wrap-button-1619616133608', function () {
+            if (!Insider.systemRules.call('getCartCount')) {
+                var payload = {
+                    product: activeProduct
+                };
 
-    self.findBadgedWrapper = function (searchKey) {
-        var productWrapper = Insider.dom(selector.productWrapper + '[href*="' + searchKey + '"]' +
-            ':not(.' + className.badgeAdded + ')');
-
-        if (productWrapper.exists()) {
-            if (!isShownCampaign) {
-                isShownCampaign = Insider.campaign.custom.show(variationId);
+                Insider.systemRules.spAddToCart().addToBasket('32277877588067', Insider.fns.noop(), payload);
             }
 
-            productWrapper.addClass(className.badgeAdded + ' sp-custom-' + variationId + '-1');
+            setTimeout(function () {
+                window.location.href = 'https://www.revivalrugs.com/cart';
+            }, 500);
+        });
 
-            !isControlGroup && self.addCustomBadge(productWrapper);
-        }
-    };
-    /* OPT-54057 END */
+        Insider.eventManager.once('click.add:to:wishlist:button:' + variationId, '#wrap-button-1619616114001', function () {
+            window.location.href = activeProduct.url;
+        });
 
-    self.addCustomBadge = function (productWrapper) {
-        productWrapper.append('<img src="' + badgeImageUrl + '" class="' + className.customBadge + '"></div>');
-    };
+        Insider.eventManager.once('click.close:button:' + variationId, '#wrap-close-button-1619101761293', function () {
+            self.remove();
 
-    self.trackLazyLoading = function () {
-        Insider.observer.observe(document.querySelector(selector.mainWrapper), function () {
-            Insider.dom(selector.productWrapper).exists() && self.checkProductsForBadge();
+            Insider.storage.set({ name: storageName, value: true, expires: 1 }, 'localStorage', true);
+        });
+
+        Insider.eventManager.once('click.overlay:' + variationId, '.ins-custom-overlay', function () {
+            self.remove();
+
+            Insider.storage.set({ name: storageName, value: true, expires: 1 }, 'localStorage', true);
         });
     };
 
-    /* OPT-54057 START */
-    self.checkAfterTheTime = function () {
-        if (Insider.dom('.' + className.customBadge).nodes.length > 0) {
-            setTimeout(function () {
-                self.checkProductsForBadge();
-                self.trackLazyLoading();
-            }, 1500);
-        }
-    };
-    /* OPT-54057 END */
+    var exitIntent = function () {
+        var timeStamp = null;
+        var lastMouseY = null;
 
-    self.setProductPageGoals = function () {
-        var productSku = (Insider.dom('.product-add-form form')
-            .data('product-sku') || '').toLowerCase().replace('.', '-');
+        Insider.eventManager.off('mousemove.ins:check:exit:intent:' + variationId, window)
+            .on('mousemove.ins:check:exit:intent:' + variationId, window, function (event) {
+                if (event.clientY <= 100) {
+                    if (timeStamp === null) {
+                        timeStamp = Insider.dateHelper.getTime();
+                        lastMouseY = event.screenY;
+                    }
 
-        if (isJoinedCamp && skuIds.indexOf(productSku) > -1) {
-            Insider.__external.sendCustomGoal(builderId, goalId.pageView);
-            Insider.eventManager.once('click.ins:add:cart:' + variationId, '#product-addtocart-button', function () {
-                Insider.__external.sendCustomGoal(builderId, goalId.addToCart);
+                    var now = Date.now();
+                    var timeDifference = now - timeStamp;
+                    var yDifference = event.screenY - lastMouseY;
+                    var speedY = Math.round(yDifference / timeDifference * 100);
+
+                    timeStamp = now;
+                    lastMouseY = event.screenY;
+
+                    if (speedY <= -500) {
+                        self.init();
+                        Insider.campaign.custom.show(variationId);
+                        Insider.eventManager.off('mousemove.ins:check:exit:intent:' + variationId, window);
+                    }
+                }
             });
-        }
     };
 
-    self.checkSalesGoal = function () {
-        var isPaid = Insider.storageAccessor.paidProducts().some(function (product) {
-            return skuIds.some(function (skuId) {
-                return product.url.indexOf(skuId) > -1;
-            });
-        });
-
-        if (isPaid) {
-            setTimeout(function () {
-                Insider.__external.sendCustomGoal(builderId, goalId.sales);
-            }, 1500);
-        }
-    };
-
-    return isValidLanguage && self.init() || false;
+    if (Insider.storage.get(storageName)) {
+        exitIntent();
+    }
 })({});
+
+false;
+/* OPT-62004 End */
+
+/* OPT-62004 Start */
+if (Insider.systemRules.call('isOnProductPage') && Insider.dom('#product-sticky-form')
+    .attr('data-product').indexOf('revival-made') > -1) {
+    JSON.stringify(Insider.systemRules.call('getCurrentProduct'));
+}
+/* OPT-62004 End */

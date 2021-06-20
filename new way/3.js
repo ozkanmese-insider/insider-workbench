@@ -133,7 +133,6 @@ Insider.__external.cartReminderConfig47273 = function (builderId) {
         });
     };
 
-    
     !Insider.storage.session.get('ins-user-session-' + variationId) && self.init();
 };
 
