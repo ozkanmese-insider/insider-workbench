@@ -19,6 +19,7 @@
         customStyle: 'ins-style-' + variationId,
         defaultGoal: 'sp-custom-' + variationId + '-1',
     };
+
     var notifications = [{
         lang: 'pl_PL',
         url: 'https://4f.com.pl/',
@@ -39,9 +40,10 @@
             !Insider.systemRules.call('isOnCartPage')) {
             self.reset();
             self.buildNotificationCenter();
+            self.setNotificationCount();
             self.setCss();
             self.setEvents();
-            self.setNotificationCount();
+
         }
     };
 

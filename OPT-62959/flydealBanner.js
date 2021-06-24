@@ -1,6 +1,7 @@
+/* OPT-62959 START */
 (function (self) {
-    var builderId = 55;
-    var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(55);
+    var builderId = 969;
+    var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(builderId);
     var classes = {
         customStyle: 'ins-style-' + variationId,
         wrapper: 'ins-preview-wrapper-' + variationId,
@@ -13,16 +14,18 @@
     };
 
     self.init = function () {
-        self.reset();
-        self.setBannerHtml();
-        self.setCss();
-        self.setEvents();
-        self.checkConditionsToShow();
+        if (!Insider.campaign.isControlGroup(variationId)) {
+            self.reset();
+            self.setBannerHtml();
+            self.setCss();
+            self.setEvents();
+        }
     };
 
     self.reset = function () {
         Insider.dom('.' + classes.overlay + ', .' + classes.wrapper + ' , .' + classes.customStyle).remove();
     };
+
     self.setBannerHtml = function () {
         var banner =
             '<div class="' + classes.overlay + '"></div>' +
@@ -45,43 +48,42 @@
             '.' + classes.wrapper + '{display: block;position: fixed;z-index: 1000;width:450px;left: 35%; top: 30%; overflow: auto; background - color: rgb(0, 0, 0); background - color: rgba(0, 0, 0, 0.4);}' +
             '.' + classes.modalContent + '{background-color: #fefefe; margin:0 auto; padding: 20px; border: 1px solid #888;}' +
             '.' + classes.container + '{color: #000; text-decoration: none;}' +
-            '.' + classes.button1 + '{position: absolute; opacity:0.5; width:30%;height:25px; top: 93%; left: 20%; transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); background-color: #555; color: white; font-size: 12px; padding: 6px 24px; border: none; cursor: pointer; border-radius: 5px; text-align: center;}' +
-            '.' + classes.button2 + '{position: absolute; opacity:0.5; width:38%;height:25px; top: 93%; left: 76%; transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); background-color: #555; color: white; font-size: 12px; padding: 6px 24px; border: none; cursor: pointer; border-radius: 5px; text-align: center;}' +
+            '.' + classes.button1 + '{position: absolute; opacity:0; width:30%;height:25px; top: 93%; left: 20%; transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); background-color: #555; color: white; font-size: 12px; padding: 6px 24px; border: none; cursor: pointer; border-radius: 5px; text-align: center;}' +
+            '.' + classes.button2 + '{position: absolute; opacity:0; width:38%;height:25px; top: 93%; left: 76%; transform: translate(-50%, -50%); -ms-transform: translate(-50%, -50%); background-color: #555; color: white; font-size: 12px; padding: 6px 24px; border: none; cursor: pointer; border-radius: 5px; text-align: center;}' +
             '.' + classes.overlay + '{z-index: 99; width: 100%; top: 0; left: 0; height: 100%; position: fixed; background-color: rgba(0, 0, 0, 0.5);}');
     };
 
     self.setEvents = function () {
-        Insider.eventManager.once('click.close:button:112' + variationId,
+        Insider.eventManager.once('click.close:button:' + variationId,
             '.' + classes.button1 + ', .' + classes.overlay,
             function () {
                 self.reset();
-                self.sendCustomGoal(12);
             });
-        Insider.eventManager.once('click.update:fare:button:112' + variationId,
+        Insider.eventManager.once('click.update:fare:button:1' + variationId,
             '.' + classes.button2 + ', .' + classes.overlay,
             function () {
                 self.reset();
-                self.sendCustomGoal(13);
+                Insider.dom('.journey-select_modifier-edit_button').click();
 
+                Insider.__external.sendCustomGoal(969, 119, true);
             });
     };
 
-    self.sendCustomGoal = function (goalId) {
-        Insider.__external.sendCustomGoal(builderId, goalId, true);
-    };
-
     self.checkConditionsToShow = function () {
-        //  Insider.campaign.custom.show(variationId);
-        if (Insider.fns.hasParameter('booking/select/')) {
-            if (Insider.dom('.searchresult_date_description_return').exists()) {
-                Insider.eventManager.once('click.select:fly:' + variationId,
-                    '.fare_button_label.ng-star-inserted:eq()',
-                    function () {
-                        self.init();
-                    });
+        if (Insider.dom('.searchresult_date_description_return').exists()) {
+            if (Insider.dom('.journey_price_fare_name-text:eq(0)').text().trim() === 'fly' &&
+                Insider.dom('.journey_price_fare_name-text:eq(1)').text().trim() === 'fly') {
+                self.init();
+            }
+        } else {
+            if (Insider.dom('.journey_price_fare_name-text:eq(0)').text().trim() === 'fly') {
+                self.init();
             }
         }
+
     };
 
-    self.init();
+    self.checkConditionsToShow();
 })({});
+true;
+/* OPT-62959 END */
