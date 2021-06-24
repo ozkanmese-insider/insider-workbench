@@ -1,41 +1,19 @@
-/* OPT-55750 START */
-setTimeout(function () {
-    var triggerContentTrigger = '#insTriggerContent';
+/* OPT-61942 Start */
+Insider.__external.isPurchasedProductsFromSpecificCategoryIO = function (specificCategory) {
+    if (Insider.systemRules.call('isOnAfterPaymentPage')) {
+        var ruleStatus = false;
 
-    var applyTriggerFixedContent = function () {
-        Insider.dom(triggerContentTrigger).css({
-            bottom: '51px',
-            top: 'auto'
+        var getUserPurchasedStorageData = ((window.insider_object || {}).transaction || {}).line_items || [];
+
+        ruleStatus = getUserPurchasedStorageData.some(function (items) {
+            return (((items || {}).product || {}).taxonomy || []).some(function (category) {
+                return category === specificCategory;
+            });
         });
-    };
 
-    applyTriggerFixedContent();
+        return ruleStatus;
+    }
+};
+/* OPT-61942 End */
 
-    Insider.fns.onElementLoaded(triggerContentTrigger, function ($triggerContent) {
-        setTimeout(function () {
-            applyTriggerFixedContent();
-
-            var observer = new MutationObserver(function (mutations) {
-                mutations.forEach(function () {
-                    var customStyleClass = 'ins-outer-stylesheet-body-lock-1162';
-
-                    if (Insider.dom(triggerContentTrigger).css('display') === 'none') {
-                        Insider.dom('head').append('<style type="text/css" class="' + customStyleClass + '">' +
-                                'html, body {overflow: hidden !important;  overflow-x:hidden !important;' +
-                                'position: fixed !important;} body {position: relative !important; }</style>');
-                    } else {
-                        Insider.dom('.' + customStyleClass).remove();
-                    }
-                });
-            });
-
-            observer.observe($triggerContent.nodes[0], {
-                attributes: true,
-                attributeFilter: ['style']
-            });
-        }, 1000);
-    }).listen();
-}, 1000);
-/* OPT-55750 END */
-
-true;
+!Insider.dom('.loan-amount.flex-row.p-4 > div.form-group.pt-2 > button').exists(); /* OPT-62315 */

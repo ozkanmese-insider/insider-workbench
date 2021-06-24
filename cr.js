@@ -1,228 +1,309 @@
-/* OPT-57749 START */
-Insider.fns.onElementLoaded('.breadcrumbs .item', function () {
-    setTimeout(function () {
-        if (!Insider.systemRules.call('isOnMainPage') && !Insider.systemRules.call('isOnAfterPaymentPage') &&
-            !Insider.systemRules.call('isOnCartPage') && !Insider.fns.inited && Insider.dom('.breadcrumbs .item').exists()) {
-
-            var loginSelector = '.authorization-link-login:last';
-            var notificationMainSelector = '.ins-preview-wrapper.ins-preview-wrapper-notification-center';
-            var getCampLang = Insider.systemRules.call('getLang');
-            var marginLeftValue;
-            var notificationLayOut = '#layout-1505891501864';
-            var notificationClosedClass = 'ins-notification-center-closed';
-
-            Insider.fns.onElementLoaded(notificationMainSelector, function () {
-                Insider.dom('.ins-preview-wrapper-notification-center .ins-notification-content')
-                    .attr('style', 'background-color: rgba(0, 0, 0, 0) !important;' +
-                        'background-image: none !important;border-width: 0px !important;border-style: none !important;' +
-                        'display:block !important;border-color: rgb(50, 50, 50) !important;border-radius: 0px !important;');
-
-                Insider.dom(notificationMainSelector).insertAfter(loginSelector);
-
-                Insider.dom(notificationMainSelector).addClass('ins-notification-new-style');
-
-                Insider.dom(loginSelector).addClass('ins-style-OPT56467');
-
-                getCampLang === 'ro_RO' ? Insider.dom('.link.wishlist:last').css('margin-left', '40px') :
-                    Insider.dom('.link.wishlist:last').css('margin-left', '30px');
-
-                Insider.dom('#rev_slider_1_1_wrapper').addClass('ins-style-slider-wrapper').css('z-index', '-1');
-
-                Insider.dom(notificationLayOut).css('z-index', '10');
-
-                getCampLang === 'sk_SK' || getCampLang === 'cs_CZ' ? marginLeftValue = 10 : marginLeftValue = 5;
-
-                Insider.dom('head')
-                    .append('<style class="ins-custom-style-OPT56467">' +
-                        ' .ins-style-OPT56467 { margin-right: 10px !important; } ' +
-                        '.ins-notification-new-style { top: auto !important; left: auto !important;' +
-                        'margin-left: ' + marginLeftValue + 'px} </style>');
-            }).listen();
-
-            Insider.eventManager.once('click.ins:notification:center:clicked',
-                '.ins-notification-center-button',
-                function () {
-                    if (Insider.dom(notificationLayOut).hasClass(notificationClosedClass)) {
-                        Insider.dom(notificationLayOut).removeClass(notificationClosedClass);
-                    } else {
-                        Insider.dom(notificationLayOut).addClass(notificationClosedClass);
-                    }
-                });
-        }
-    }, 4750);
-}).listen();
-/* OPT-57749 END */
-/* OPT-62549 START */
 (function (self) {
-    var selectors = {
-        notificationContent: '.ins-notification-content.ins-notification-content-notification-center',
-        notificationWrapper: '.ins-preview-wrapper.ins-preview-wrapper-notification-center',
-        hidedElement: '.header.content > ul > li.authorization-link > a > span',
-        appendToLoggedIn: '.customer-welcome',
-        appendToLoggedOut: '.authorization-link-login',
-        contentWrapper: '.ins-content-wrapper.ins-content-wrapper-notification-center'
-    };
-    var notificationContentStyle = 'background-color: rgba(0, 0, 0, 0) !important; background-image: none !important;' +
-        'border-width: 0px !important;border-style: none !important; display: block !important;' +
-        'border-color: rgb(50, 50, 50) !important;border-radius: 0px !important;';
-    var notificationWrapperStyle = 'display: block; visibility: visible; position: absolute;';
+    var isDesktop = Insider.browser.isDesktop();
+    var formBuilderId = isDesktop ? 551 : 552;
+    var formVariationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(formBuilderId);
+    var leadBuilderId = 545;
+    var leadVariationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(leadBuilderId);
+    var storageName = 'recipient-id-' + formVariationId;
+    var isCampaignJoined = (Insider.storage.localStorage.get('sp-camp-' + formVariationId) || { joined: false }).joined;
 
     self.init = function () {
-        self.notificationCenterSettings();
+        if (!isCampaignJoined) {
+            if (!Insider.campaign.isControlGroup(formVariationId)) {
+                self.setStorage();
+                self.sendLead();
+            }
+
+            Insider.campaign.custom.show(formVariationId);
+        }
     };
 
-    self.notificationCenterSettings = function () {
-        Insider.fns.onElementLoaded(selectors.notificationWrapper, function () {
-            setTimeout(function () {
-                if (Insider.systemRules.call('isUserLoggedIn') && (Insider.systemRules.call('isOnCategoryPage') ||
-                        Insider.systemRules.call('isOnProductPage'))) {
-                    switch (Insider.fns.parseURL().host) {
-                        case '4fstore.ru':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
+    self.setStorage = function () {
+        var recipientId = Insider.fns.getParameter('recipientID');
 
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:6.5rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style',
-                                notificationWrapperStyle + 'margin-left: 5rem;');
+        if (recipientId) {
+            Insider.storage.set({
+                name: storageName,
+                value: recipientId,
+                expires: 365
+            });
+        }
+    };
 
-                            Insider.dom(selectors.hidedElement).hide();
-                            break;
-                        case '4fstore.com':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
+    self.buildHTML = function () {
+        var html = '<div class="ins-overlay-' + formVariationId + '">\n' +
+        '</div>\n' +
+        '<div class="ins-pop-up-' + formVariationId + '">\n' +
+        '    <div class="ins-close-button">x</div>\n' +
+        '    <div class="ins-image-wrapper">' +
+        '    <img class="ins-top-image"\n' +
+        '         src="https://image.useinsider.com/clarinsuk/defaultImageLibrary/EFE-Form-1621344417.jpeg" alt="">\n' +
+        '    <div class="ins-heading"><div class="ins-heading-1">NEW</div>' +
+        '    <div class="ins-heading-2">Extra-Firming</br>Energy</div></div>' +
+        '    </div>' +
+        '    <div class="ins-form-part-step-1">\n' +
+        '        <div class="ins-header-text">Enter you details and tap submit to receive your FREE sample:</div>\n' +
+        '        <form class="ins-form" autocomplete="off" action="">\n' +
+        '            <div class="ins-form-row">\n' +
+        '                <label for="ins-email">Email address*</label>\n' +
+        '                <input class="ins-input" type="email" name="email" id="ins-email" required>\n' +
+        '            </div>\n' +
+        '            <div class="ins-merge-row">\n' +
+        '                <div class="ins-form-row ins-merge-element ins-merge-element-first">\n' +
+        '                    <label for="ins-first-name">First Name*</label>\n' +
+        '                    <input class="ins-input" type="text" id="ins-first-name" required>\n' +
+        '                </div>\n' +
+        '                <div class="ins-form-row ins-merge-element">\n' +
+        '                    <label for="ins-last-name">Last Name*</label>\n' +
+        '                    <input class="ins-input" type="text" id="ins-last-name" required>\n' +
+        '                </div>\n' +
+        '            </div>\n' +
+        '            <div class="ins-form-row">\n' +
+        '                <label for="ins-address-line-1">Address line 1*</label>\n' +
+        '                <input class="ins-input" type="text" id="ins-address-line-1" required>\n' +
+        '            </div>\n' +
+        '            <div class="ins-merge-row">\n' +
+        '                <div class="ins-form-row ins-merge-element ins-merge-element-first">\n' +
+        '                    <label for="ins-address-line-2">Address line 2</label>\n' +
+        '                    <input class="ins-input" type="text" id="ins-address-line-2">\n' +
+        '                </div>\n' +
+        '                <div class="ins-form-row ins-merge-element">\n' +
+        '                    <label for="ins-address-line-3">Address line 3</label>\n' +
+        '                    <input class="ins-input" type="text" id="ins-address-line-3">\n' +
+        '                </div>\n' +
+        '            </div>\n' +
+        '            <div class="ins-form-row">\n' +
+        '                <label for="ins-town-or-city">Town/City*</label>\n' +
+        '                <input class="ins-input" type="text" id="ins-town-or-city" required>\n' +
+        '            </div>\n' +
+        '            <div class="ins-form-row">\n' +
+        '                <label for="ins-postcode">Postcode*</label>\n' +
+        '                <input class="ins-input" type="text" id="ins-postcode" required>\n' +
+        '            </div>\n' +
+        '            <div class="ins-form-bottom-row ins-checkbox-row">\n' +
+        '                <input style="appearance: auto;width: unset;height: unset;opacity: unset;position: unset;margin-right: 15px;"\n' +
+        '                       type="checkbox" id="ins-checkbox">\n' +
+        '                <div>I want to opt-in to receive future free samples via post from Clarins***</div>\n' +
+        '            </div>\n' +
+        '            <div class="ins-form-bottom-row ins-checkbox-row">\n' +
+        '                <input style="appearance: auto;width: unset;height: unset;opacity: unset;position: unset;margin-right: 15px;"\n' +
+        '                       type="checkbox" id="ins-checkbox" required>\n' +
+        '                <div>I agree to the <a href="https://www.clarins.co.uk/support.html?question=total-eye-lift-sampling"' +
+        '                    style="text-decoration: underline;">sampling terms of use</a> to receive postal samples.**</div>\n' +
+        '            </div>\n' +
+        '            <span class="ins-required-text" style="font-weight: bold; display: block; margin: 10px 0px 0px 25px;">(required)</span>' +
+        '            <div class="ins-form-bottom-row ins-submit-row">\n' +
+        '                <input type="submit" class="sp-custom-' + formVariationId + '-1" id="ins-form-submit" value="SUBMIT DETAILS" required>\n' +
+        '            </div>\n' +
+        '        </form>\n' +
+        '        <div class="ins-footer-warning">*Required fields</div>\n' +
+        '        <div class="ins-footer">***The information is processed by Clarins and its service providers to process your sample\n' +
+        '            delivery, for the\n' +
+        '            purposes\n' +
+        '            of customer relations management. In particular to provide you with personalised offers and/or to manage your membership to our Loyalty Program and to create your custom beauty program. The data is kept for three years from your last order or contact. You have\n' +
+        '            the right to access, correct, delete and transfer information concerning you as well as the right to oppose\n' +
+        '            to\n' +
+        '            and\n' +
+        '            restrict its processing. You may exercise this right by contacting us. To find out more, please consult our\n' +
+        '            privacy\n' +
+        '            policy by clicking <a href="https://www.clarins.co.uk/help-privacy-security/privacy_policy.html" style="text-decoration: underline;">here</a>\n' +
+        '           <div class="ins-footer-continued" style="margin-top:10px;">' +
+        '           **The information collected with this form will be processed by Insider, ' +
+        '           <span id="ins-user-address">INSIDER SERVICES UK LIMITED, 120 Regent Street, London, W1B 5FE, United Kingdom</span>' +
+        '           on behalf of Clarins UK, Clarins (U.K.) Limited, a company registered in England and Wales under company number 01580079, 10 Cavendish' +
+        '           Place, London, W1G 9DN, to send you this Total Eye Lift sample and emails relating to this sample. The data' +
+        '           is kept for three years after your last order or contact. You have a right to access, rectify and erase your' +
+        '           personal data as well as a right to object and restrict processing by' +
+        '           contacting us. For more details on our Privacy Policy, click ' +
+        '           <a href="#" style="text-decoration: underline;">here</a></div>' +
+        '        </div>\n' +
+        '        </div>\n' +
+        '    <div class="ins-form-part-step-2">\n' +
+        '        Thank you for submitting your details. Please note, your samples will take up to 2 weeks to reach your door.\n' +
+        '        <br>\n' +
+        '        \n' +
+        '       <div class="ins-form-bottom-row ins-submit-row">\n' +
+        '           <a href="https://www.clarins.co.uk/bestsellers/" id="ins-form-submit-2">CONTINUE SHOPPING</a>' +
+        '       </div>\n' +
+        '    </div>\n' +
+        '</div>';
 
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:9rem !important;z-index:99'); /* OPT-63129 */
+        return html;
+    };
 
-                            Insider.dom(selectors.hidedElement).hide();
-                            break;
-                        case '4fstore.cz':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
+    self.sendLead = function () {
+        var config = {
+            builderId: formBuilderId,
+            html: self.buildHTML(),
+            prepareData: self.prepareData
+        };
 
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:6.5rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style',
-                                notificationWrapperStyle);
+        (Insider.__external.customLeadCollectionSender || Insider.fns.noop)(config);
+    };
 
-                            Insider.dom(selectors.hidedElement).hide();
-                            break;
-                        case '4fstore.de':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
-
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:7.5rem !important');
-
-                            Insider.dom(selectors.hidedElement).hide();
-                            break;
-                        case '4fstore.sk':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
-
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:16.5rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style',
-                                notificationWrapperStyle + 'margin-left:1rem');
-
-                            Insider.dom(selectors.hidedElement).hide();
-                            break;
-                        case '4fstore.ro':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
-
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:7.5rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style',
-                                notificationWrapperStyle);
-
-                            Insider.dom(selectors.hidedElement).hide();
-                            break;
-                        case '4fstore.lt':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
-
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:9.5rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style',
-                                notificationWrapperStyle);
-
-                            Insider.dom(selectors.hidedElement).hide();
-                            break;
-                        case '4fstore.lv':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedIn);
-
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:7.5rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style',
-                                notificationWrapperStyle);
-
-                            Insider.dom(selectors.hidedElement).hide();
-                            break;
+    self.prepareData = function (userInformation) {
+        var leadData = {
+            is_frameless: true,
+            form_data: [{
+                type: 'text',
+                id: '1545222171109',
+                text: '',
+                options: [{
+                    id: '1545222171109',
+                    text: Insider.storage.get(storageName) || '',
+                    type: 'text',
+                    inputType: 'text'
+                }],
+                questionId: '1545222171109',
+            },
+            {
+                type: 'text',
+                id: '1545222181559',
+                text: '',
+                options: [{
+                    id: '1545222181559',
+                    text: userInformation.email,
+                    type: 'text',
+                    inputType: 'text'
+                }],
+                questionId: '1545222181559',
+            },
+            {
+                type: 'text',
+                id: '1621254177653',
+                text: '',
+                options: [{
+                    id: '1621254177653',
+                    text: userInformation.firstName,
+                    type: 'text',
+                    inputType: 'text'
+                }],
+                questionId: '1621254177653',
+            },
+            {
+                type: 'text',
+                id: '1621254179011',
+                text: '',
+                options: [{
+                    id: '1621254179011',
+                    text: userInformation.lastName,
+                    type: 'text',
+                    inputType: 'text'
+                }],
+                questionId: '1621254179011',
+            },
+            {
+                type: 'text',
+                id: '1621254182339',
+                text: '',
+                options: [{
+                    id: '1621254182339',
+                    text: userInformation.address || '',
+                    type: 'text',
+                    inputType: 'text'
+                }],
+                questionId: '1621254182339',
+            },
+            {
+                type: 'text',
+                id: '1621254186947',
+                text: '',
+                options: [{
+                    id: '1621254186947',
+                    text: userInformation.addressLine2 || '',
+                    type: 'text',
+                    inputType: 'text'
+                }],
+                questionId: '1621254186947',
+            },
+            {
+                type: 'text',
+                id: '1621254187927',
+                text: '',
+                options: [{
+                    id: '1621254187927',
+                    text: userInformation.addressLine3 || '',
+                    type: 'text',
+                    inputType: 'text'
+                }],
+                questionId: '1621254187927',
+            },
+            {
+                type: 'text',
+                id: '1621254188992',
+                text: '',
+                options: [{
+                    id: '1621254188992',
+                    text: userInformation.townCity || '',
+                    type: 'text',
+                    inputType: 'text'
+                }],
+                questionId: '1621254188992',
+            },
+            {
+                type: 'text',
+                id: '1621254189983',
+                text: '',
+                options: [
+                    {
+                        id: '1621254189983',
+                        text: userInformation.postcode || '',
+                        type: 'text',
+                        inputType: 'email'
                     }
-                } else if (Insider.systemRules.call('isOnCategoryPage') ||
-                    Insider.systemRules.call('isOnProductPage')) {
-                    switch (Insider.fns.parseURL().host) {
-                        case '4fstore.cz':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedOut);
-
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:5.7rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style',
-                                notificationWrapperStyle);
-                            Insider.dom(selectors.contentWrapper).attr('style',
-                                'margin-left:4.5rem !important;');
-                            break;
-                        case '4fstore.de':
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left: 8rem !important;');
-                            break;
-                        case '4fstore.sk':
-                            Insider.dom(selectors.contentWrapper).attr('style', 'margin-left:4.5rem !important;');
-                            break;
-                        case '4fstore.ro':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedOut);
-
-                            Insider.dom(selectors.notificationContent).attr('style', notificationContentStyle +
-                                'margin-left:8.7rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style', notificationWrapperStyle);
-                            break;
-                        case '4fstore.ru':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedOut);
-
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:5.5rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style', notificationWrapperStyle);
-                            break;
-                        case '4fstore.lt':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedOut);
-
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:5rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style', notificationWrapperStyle);
-                            Insider.dom(selectors.contentWrapper).attr('style', 'margin-left:4.5rem !important;');
-                            break;
-                        case '4fstore.lv':
-                            Insider.dom(selectors.notificationWrapper).insertAfter(selectors.appendToLoggedOut);
-                            /* OPT-63129 Start */
-                            Insider.dom(selectors.notificationContent).attr('style',
-                                notificationContentStyle + 'margin-left:5.3rem !important');
-                            Insider.dom(selectors.notificationWrapper).attr('style', notificationWrapperStyle);
-                            Insider.dom(selectors.contentWrapper).attr('style', 'margin-left:4.5rem !important;');
-                            break;
-                            /* OPT-63129 End */
+                ],
+                questionId: '1621254189983',
+            },
+            {
+                type: 'text',
+                id: '1621259012741',
+                text: '',
+                options: [
+                    {
+                        id: '1621259012741',
+                        text: isDesktop ? 'Desktop' : 'Mobile',
+                        type: 'text',
+                        inputType: 'text'
                     }
-                }
-            }, 450);
-        }).listen();
+                ],
+                questionId: '1621259012741',
+            },
+            {
+                type: 'text',
+                id: '1555415354531',
+                text: '',
+                options: [{
+                    id: '1555415354531',
+                    text: 'I want to opt-in to receive future free samples via post from Clarins.',
+                    type: 'checkbox',
+                    inputType: 'email-opt-in'
+                }],
+                questionId: '1555415354531',
+            }],
+            uid: Insider.getUserId(),
+            campaign_id: leadVariationId,
+            source: location.href,
+        };
+
+        if (userInformation.optIn) {
+            leadData.form_data.push({
+                type: 'text',
+                id: '1621253827467',
+                text: '',
+                options: [{
+                    id: '1621253827467',
+                    text: 'I agree to the sampling terms of use to receive postal samples.',
+                    type: 'checkbox',
+                    inputType: 'gdpr-opt-in'
+                }],
+                questionId: '1621253827467',
+            });
+        }
+
+        return leadData;
     };
 
     self.init();
 })({});
-/* OPT-62549 END */
-var $selector = '#ins-wrap-question-text-1505891501864';
 
-Insider.dom($selector).hide();
-
-Insider.eventManager.once('mousedown.notification:', '.ins-notification-center-button',
-    function () {
-        if (Insider.dom($selector).css('display') === 'none') {
-            Insider.dom($selector).show();
-        } else {
-            Insider.dom($selector).hide();
-        }
-    });
+false;

@@ -1,4 +1,4 @@
-
+/* OPT-53056 START */
 var builderId = 50;
 var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(builderId);
 var maxWidth = window.innerWidth;
@@ -14,12 +14,15 @@ Insider.eventManager.once('mousemove.listen:' + variationId, 'header', function 
         }
     }
 });
+
 Insider.eventManager.once('mouseleave.list:' + variationId, function () {
     if (Insider.__external.isExitIntent) {
         Insider.campaign.info.show(variationId);
     }
 });
+
 false;
+/* OPT-53056 END */
 
 /* OPT-53056 START */
 Insider.__external.ajaxListener(function (url, response, method) {
@@ -30,4 +33,8 @@ Insider.__external.ajaxListener(function (url, response, method) {
         }, 'localStorage', true);
     }
 });
+
 Insider.storage.get('ins-web-questionare-OPT53056', 'localStorage', true) || false;
+/* OPT-53056 END */
+Insider.dom('button.add-to-cart-button').attr('data-product-id') ||
+    Insider.dom('.add-to-fav').attr('data-product-id') || '';
