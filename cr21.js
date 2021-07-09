@@ -99,3 +99,56 @@ Insider.__external.createBannerConfig57444 = function (config) {
     self.init();
 };
 true;
+
+/* OPT-64674 Start */
+(function (self) {
+    'use strict';
+
+    var timeoutDuration = 0;
+    var variationId = 'c264';
+    var classes = {
+        wrapper: 'ins-search-form-wrapper-' + variationId,
+        searchForm: 'ins-search-form-' + variationId,
+        searchIcon: 'ins-search-icon-' + variationId,
+        closeIcon: 'ins-close-icon-' + variationId,
+        searchButton: 'ins-search-button-' + variationId
+    };
+
+    self.init = function () {
+        Insider.segmentModules['newReturningUser']('new') ?
+            timeoutDuration = 3000 : timeoutDuration = 5000;
+        setTimeout(function () {
+            self.reset();
+            self.buildHtml();
+            self.setEvents();
+        }, timeoutDuration);
+    };
+
+    self.reset = function () {
+        Insider.dom('.' + classes.wrapper).remove();
+    };
+
+    self.buildHtml = function () {
+        var html =
+            '<div class="' + classes.wrapper + '">' +
+            '<form class="' + classes.searchForm + '" action="https://www.forevernew.com.au/catalogsearch/result/" method="get">' +
+            '  <span class="' + classes.searchIcon + '"><i class="fa fa-search"></i></span>' +
+            '  <span class="' + classes.closeIcon + '"><i class="fa fa-times"></i></span>' +
+            '  <input type="text" name="q" id="' + classes.searchButton + '" placeholder="Search..." />' +
+            '</div>' +
+            '</form>' +
+            '</div>';
+
+        Insider.dom('html').append(html);
+    };
+
+    self.setEvents = function () {
+        Insider.eventManager.once('click.ins:close:button:' + variationId, '.' + classes.closeIcon,
+            function () {
+                self.reset();
+            });
+    };
+
+    self.init();
+})({});
+/* OPT-64674 End */
