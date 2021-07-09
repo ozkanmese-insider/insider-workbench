@@ -3,117 +3,115 @@
     var builderId = 11;
     var variationId = Insider.campaign.userSegment.segments[builderId];
     var storageName = 'ins-form-control-storage-opt57312';
-    var formInformation = [
-        {
-            formEntranceUrl: '/book-a-test-drive-range-rover',
-            formCompleteUrl: '/test-surusu-tesekkurler-range-rover',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-range-rover-sport',
-            formCompleteUrl: '/test-surusu-tesekkurler-range-rover-sport',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-range-rover-velar',
-            formCompleteUrl: '/test-surusu-tesekkurler-range-rover-velar',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-range-rover-evoque',
-            formCompleteUrl: '/test-surusu-tesekkurler-range-rover-evoque',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-discovery',
-            formCompleteUrl: '/test-surusu-tesekkurler-discovery',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-discovery-sport',
-            formCompleteUrl: '/test-surusu-tesekkurler-discovery-sport',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/contact-form',
-            formCompleteUrl: '/tesekkurler',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/ownership-service-and-maintenance-book-service-online',
-            formCompleteUrl: '/online-servis-tesekkurler',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-range-rover-evoque',
-            formCompleteUrl: '/kmi-tesekkurler-range-rover-evoque',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-defender',
-            formCompleteUrl: '/kmi-tesekkurler-land-rover-defender',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-range-rover-velar',
-            formCompleteUrl: '/kmi-tesekkurler-range-rover-velar',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-range-rover',
-            formCompleteUrl: '/kmi-tesekkurler-range-rover',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-range-rover-sport',
-            formCompleteUrl: '/kmi-tesekkurler-range-rover-sport',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-discovery',
-            formCompleteUrl: '/kmi-tesekkurler-discovery',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-discovery-sport',
-            formCompleteUrl: '/kmi-tesekkurler-discovery-sport',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/online-chat',
-            formCompleteUrl: '/online-chat-erisim',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed',
-            formCompleteUrl: '/online-chat-erisim',
-            formEntrance: false,
-            formComplete: false
-        }
-    ];
+    var formInformation = [{
+        formEntranceUrl: '/book-a-test-drive-range-rover',
+        formCompleteUrl: '/test-surusu-tesekkurler-range-rover',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-range-rover-sport',
+        formCompleteUrl: '/test-surusu-tesekkurler-range-rover-sport',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-range-rover-velar',
+        formCompleteUrl: '/test-surusu-tesekkurler-range-rover-velar',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-range-rover-evoque',
+        formCompleteUrl: '/test-surusu-tesekkurler-range-rover-evoque',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-discovery',
+        formCompleteUrl: '/test-surusu-tesekkurler-discovery',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-discovery-sport',
+        formCompleteUrl: '/test-surusu-tesekkurler-discovery-sport',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/contact-form',
+        formCompleteUrl: '/tesekkurler',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/ownership-service-and-maintenance-book-service-online',
+        formCompleteUrl: '/online-servis-tesekkurler',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-range-rover-evoque',
+        formCompleteUrl: '/kmi-tesekkurler-range-rover-evoque',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-defender',
+        formCompleteUrl: '/kmi-tesekkurler-land-rover-defender',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-range-rover-velar',
+        formCompleteUrl: '/kmi-tesekkurler-range-rover-velar',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-range-rover',
+        formCompleteUrl: '/kmi-tesekkurler-range-rover',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-range-rover-sport',
+        formCompleteUrl: '/kmi-tesekkurler-range-rover-sport',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-discovery',
+        formCompleteUrl: '/kmi-tesekkurler-discovery',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-discovery-sport',
+        formCompleteUrl: '/kmi-tesekkurler-discovery-sport',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/online-chat',
+        formCompleteUrl: '/online-chat-erisim',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed',
+        formCompleteUrl: '/online-chat-erisim',
+        formEntrance: false,
+        formComplete: false
+    }];
 
     Insider.storage.session.get(storageName) === null && Insider.storage.session.set({
         name: storageName,
         value: formInformation
-    });/* OPT-62085 */
+    }); /* OPT-62085 */
 
-    var formAbandonedStorage = Insider.storage.session.get(storageName);/* OPT-62085 */
+    var formAbandonedStorage = Insider.storage.session.get(storageName); /* OPT-62085 */
 
     self.init = function () {
         if (Insider.systemRules.call('isOnCartPage') || Insider.fns.hasParameter('/contact-form') ||
@@ -172,120 +170,113 @@
 
 false;
 /* OPT-57312 End */
-
-
-
-
-
 /* OPT-57312 Start */
 (function (self) {
     var builderId = 11;
     var variationId = Insider.campaign.userSegment.segments[builderId];
     var storageName = 'ins-form-control-storage-opt57312';
-    var formInformation = [
-        {
-            formEntranceUrl: '/book-a-test-drive-range-rover',
-            formCompleteUrl: '/test-surusu-tesekkurler-range-rover',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-range-rover-sport',
-            formCompleteUrl: '/test-surusu-tesekkurler-range-rover-sport',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-range-rover-velar',
-            formCompleteUrl: '/test-surusu-tesekkurler-range-rover-velar',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-range-rover-evoque',
-            formCompleteUrl: '/test-surusu-tesekkurler-range-rover-evoque',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-discovery',
-            formCompleteUrl: '/test-surusu-tesekkurler-discovery',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/book-a-test-drive-discovery-sport',
-            formCompleteUrl: '/test-surusu-tesekkurler-discovery-sport',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/contact-form',
-            formCompleteUrl: '/tesekkurler',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/ownership-service-and-maintenance-book-service-online',
-            formCompleteUrl: '/online-servis-tesekkurler',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-range-rover-evoque',
-            formCompleteUrl: '/kmi-tesekkurler-range-rover-evoque',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-defender',
-            formCompleteUrl: '/kmi-tesekkurler-land-rover-defender',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-range-rover-velar',
-            formCompleteUrl: '/kmi-tesekkurler-range-rover-velar',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-range-rover',
-            formCompleteUrl: '/kmi-tesekkurler-range-rover',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-range-rover-sport',
-            formCompleteUrl: '/kmi-tesekkurler-range-rover-sport',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-discovery',
-            formCompleteUrl: '/kmi-tesekkurler-discovery',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed-discovery-sport',
-            formCompleteUrl: '/kmi-tesekkurler-discovery-sport',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/online-chat',
-            formCompleteUrl: '/online-chat-erisim',
-            formEntrance: false,
-            formComplete: false
-        },
-        {
-            formEntranceUrl: '/keep-me-informed',
-            formCompleteUrl: '/online-chat-erisim',
-            formEntrance: false,
-            formComplete: false
-        }
-    ];
+    var formInformation = [{
+        formEntranceUrl: '/book-a-test-drive-range-rover',
+        formCompleteUrl: '/test-surusu-tesekkurler-range-rover',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-range-rover-sport',
+        formCompleteUrl: '/test-surusu-tesekkurler-range-rover-sport',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-range-rover-velar',
+        formCompleteUrl: '/test-surusu-tesekkurler-range-rover-velar',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-range-rover-evoque',
+        formCompleteUrl: '/test-surusu-tesekkurler-range-rover-evoque',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-discovery',
+        formCompleteUrl: '/test-surusu-tesekkurler-discovery',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/book-a-test-drive-discovery-sport',
+        formCompleteUrl: '/test-surusu-tesekkurler-discovery-sport',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/contact-form',
+        formCompleteUrl: '/tesekkurler',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/ownership-service-and-maintenance-book-service-online',
+        formCompleteUrl: '/online-servis-tesekkurler',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-range-rover-evoque',
+        formCompleteUrl: '/kmi-tesekkurler-range-rover-evoque',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-defender',
+        formCompleteUrl: '/kmi-tesekkurler-land-rover-defender',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-range-rover-velar',
+        formCompleteUrl: '/kmi-tesekkurler-range-rover-velar',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-range-rover',
+        formCompleteUrl: '/kmi-tesekkurler-range-rover',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-range-rover-sport',
+        formCompleteUrl: '/kmi-tesekkurler-range-rover-sport',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-discovery',
+        formCompleteUrl: '/kmi-tesekkurler-discovery',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed-discovery-sport',
+        formCompleteUrl: '/kmi-tesekkurler-discovery-sport',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/online-chat',
+        formCompleteUrl: '/online-chat-erisim',
+        formEntrance: false,
+        formComplete: false
+    },
+    {
+        formEntranceUrl: '/keep-me-informed',
+        formCompleteUrl: '/online-chat-erisim',
+        formEntrance: false,
+        formComplete: false
+    }];
 
     Insider.storage.localStorage.get(storageName) === null && Insider.storage.set({
         name: storageName,
