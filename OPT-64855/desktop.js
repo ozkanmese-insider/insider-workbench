@@ -4,6 +4,7 @@
     var variationId = Insider.campaign.userSegment.getActiveVariationByBuilderId(builderId);
     var isControlGroup = Insider.campaign.isControlGroup(variationId);
     var classes = {
+        customStyle: 'ins-custom-style-' + variationId,
         container: 'ins-sticky-cart-container-' + variationId,
         wrapper1: 'ins-sticky-wrapper-1-' + variationId,
         wrapper2: 'ins-sticky-wrapper-2-' + variationId,
@@ -16,10 +17,10 @@
         moveToTop: 'ins-move-to-top' + variationId
     };
     var addToCartButtonText = 'ADD TO CART';
-    var productPrice = Insider.systemRules.getCurrentProduct().price;
+    var productPrice = Insider.systemRules.getCurrentProduct().price || 0;
     var productName = Insider.dom('.detail-item > h1.detail-item_brand > div.detail-item_title').text();
     var productBrand = Insider.dom('.detail-item > h1.detail-item_brand > span > span.ng-binding').text();
-    var productImage = Insider.systemRules.getCurrentProduct().img;
+    var productImage = Insider.systemRules.getCurrentProduct().img || '';
     var partnersFavoriteButton = '.btn--watch.btn.btn-secondary';
     var partnersAddToCartButton = '.btn--add-to-cart.btn--has-icon.btn.btn-primary';
     var partnersCommentsButton = '.hidden-xs.productTile_rating.ng-pristine';
@@ -40,6 +41,16 @@
 
     self.append = function () {
         Insider.dom('#search-bar').after(self.generalHtml());
+        Insider.dom('head').append('<style class="' + classes.customStyle + '">' +
+        '.' + classes.wrapper1 + '{display:flex; width:100%; align-items: center; justify-content: flex-start;}' +
+        '.' + classes.wrapper2 + '{display:flex; margin-right:5%; align-items: center;}' +
+        '.' + classes.addtocart + '.sp-custom-c2-1 button {width:150px; height:58px; background-color: white; color:#ED702A; font-weight: bolder; border: 2px solid #ED702A; margin-left:8%}' +
+        '.' + classes.productBrand + '{font-weight:600; font-family: AmsiPro-Light; color: black; margin-right:35%}' +
+        '.' + classes.productName + '{font-weight:400;}' +
+        '.' + classes.productPrice + '{olor: black; font-weight:bolder; font-size: large; margin-right:8%; margin-left:8%;}' +
+        '.' + classes.productImage + '{width: 60px; height:60px; margin-right:2%; margin-left:2%}' +
+        '.' + classes.container + '{display:flex; width:100%; background-color:white; justify-content: space-between; align-items: center; padding-top:1%; padding-bottom:1%; border-top: 1px solid #ED702A;}' +
+        '</style>');
     };
 
     self.generalHtml = function () {
@@ -77,6 +88,8 @@
     self.setEvents = function () {
         Insider.eventManager.once('click.add:cart:' + variationId, '.' + classes.addtocart,
             function () {
+                self.sendCustomGoal();
+
                 Insider.dom(partnersAddToCartButton).click();
             });
 
@@ -93,9 +106,13 @@
     };
 
     self.sendCustomGoal = function () {
-        Insider.__external.sendCustomGoal(57, 6, false);
+        Insider.__external.sendCustomGoal(4, 4, false);
     };
 
     self.init();
+
+    sQuery(document).on('framelessInited' + variationId, self.init);
 })({});
+
+true;
 /* OPT-64855 END */
